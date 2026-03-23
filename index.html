@@ -3,31 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cipher — AES-256-CBC Encrypt & Decrypt Tool | Abubakar Shaikh</title>
-<meta name="description" content="A free, browser-native AES-256-CBC encrypt and decrypt tool. No data leaves your browser. Built by Abubakar Shaikh.">
-<meta name="keywords" content="AES-256-CBC, encrypt, decrypt, cipher, cryptography, browser crypto, web crypto API, abubakar shaikh">
+<title>xenc — AES-256-CBC File & Text Encryption | Abubakar Shaikh</title>
+<meta name="description" content="Free browser-native AES-256-CBC encrypt and decrypt tool for text and files. No data leaves your browser. Built by Abubakar Shaikh.">
+<meta name="keywords" content="AES-256-CBC, file encryption, encrypt, decrypt, xenc, browser crypto, web crypto API, abubakar shaikh">
 <meta name="author" content="Abubakar Shaikh">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://cipher.abubakarshaikh.dev">
+<link rel="canonical" href="https://xenc.abubakarshaikh.dev">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://cipher.abubakarshaikh.dev">
-<meta property="og:title" content="Cipher — AES-256-CBC Encrypt & Decrypt Tool">
-<meta property="og:description" content="Free browser-native AES-256-CBC tool. Encrypt and decrypt instantly. Zero network calls, 100% private. Built by Abubakar Shaikh.">
-<meta property="og:image" content="https://cipher.abubakarshaikh.dev/og-image.png">
-<meta property="og:site_name" content="Cipher by Abubakar Shaikh">
+<meta property="og:url" content="https://xenc.abubakarshaikh.dev">
+<meta property="og:title" content="xenc — AES-256-CBC File & Text Encryption">
+<meta property="og:description" content="Free browser-native AES-256-CBC tool. Encrypt files and text instantly. Zero network calls, 100% private. Built by Abubakar Shaikh.">
+<meta property="og:image" content="https://xenc.abubakarshaikh.dev/og-image.png">
+<meta property="og:site_name" content="xenc by Abubakar Shaikh">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://cipher.abubakarshaikh.dev">
-<meta name="twitter:title" content="Cipher — AES-256-CBC Encrypt & Decrypt Tool">
-<meta name="twitter:description" content="Free browser-native AES-256-CBC tool. Zero network calls. Built by Abubakar Shaikh.">
-<meta name="twitter:image" content="https://cipher.abubakarshaikh.dev/og-image.png">
+<meta name="twitter:url" content="https://xenc.abubakarshaikh.dev">
+<meta name="twitter:title" content="xenc — AES-256-CBC File & Text Encryption">
+<meta name="twitter:description" content="Free browser-native AES-256-CBC tool. Encrypt files and text. Zero network calls. Built by Abubakar Shaikh.">
+<meta name="twitter:image" content="https://xenc.abubakarshaikh.dev/og-image.png">
 <meta name="twitter:creator" content="@abubakar_shaikh">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Cipher",
-  "url": "https://cipher.abubakarshaikh.dev",
-  "description": "Browser-native AES-256-CBC encrypt and decrypt tool. No data leaves your browser.",
+  "name": "xenc",
+  "url": "https://xenc.abubakarshaikh.dev",
+  "description": "Browser-native AES-256-CBC encrypt and decrypt tool for files and text. No data leaves your browser.",
   "applicationCategory": "SecurityApplication",
   "operatingSystem": "Any",
   "author": {
@@ -44,22 +44,26 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
+/* ── Reset & tokens ─────────────────────────────────── */
 :root {
-  --bg: #0a0a0f;
-  --surface: #0f0f1a;
-  --surface2: #131320;
-  --border: #1e1e35;
+  --bg:            #0a0a0f;
+  --surface:       #0f0f1a;
+  --surface2:      #131320;
+  --surface3:      #0c0c18;
+  --border:        #1e1e35;
   --border-active: #3d3d6b;
-  --accent: #6c63ff;
-  --accent2: #00d4aa;
-  --danger: #ff4d6d;
-  --warn: #ffbd2e;
-  --text: #e8e8f0;
-  --muted: #5a5a7a;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Syne', sans-serif;
+  --accent:        #6c63ff;
+  --accent2:       #00d4aa;
+  --danger:        #ff4d6d;
+  --warn:          #ffbd2e;
+  --text:          #e8e8f0;
+  --muted:         #5a5a7a;
+  --mono:          'JetBrains Mono', monospace;
+  --sans:          'Syne', sans-serif;
+  --radius:        5px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   background: var(--bg);
   color: var(--text);
@@ -68,7 +72,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px 80px;
+  padding: 40px 20px 100px;
   position: relative;
   overflow-x: hidden;
 }
@@ -76,8 +80,8 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background-image:
-    linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(108,99,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,.035) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none; z-index: 0;
 }
@@ -85,18 +89,18 @@ body::after {
   content: '';
   position: fixed;
   width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(108,99,255,0.055) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(108,99,255,.05) 0%, transparent 70%);
   top: -250px; left: -250px;
   pointer-events: none; z-index: 0;
 }
-.container { width: 100%; max-width: 780px; position: relative; z-index: 1; }
+.container { width: 100%; max-width: 800px; position: relative; z-index: 1; }
 
-/* ── Header ── */
-.header { margin-bottom: 40px; }
+/* ── Header ─────────────────────────────────────────── */
+.header { margin-bottom: 36px; }
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--accent2); background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2);
+  font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--accent2); background: rgba(0,212,170,.08); border: 1px solid rgba(0,212,170,.2);
   padding: 4px 10px; border-radius: 2px; margin-bottom: 14px;
 }
 .badge::before {
@@ -105,72 +109,39 @@ body::after {
 }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
 h1 {
-  font-family: var(--sans); font-size: clamp(28px,4vw,40px);
-  font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+  font-family: var(--sans); font-size: clamp(30px,5vw,46px);
+  font-weight: 800; line-height: 1; letter-spacing: -.03em;
 }
 h1 span { color: var(--accent); }
-.subtitle { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 0.03em; }
+.subtitle { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: .03em; }
 .byline {
   display: inline-block; margin-top: 10px; font-size: 11px; color: var(--accent);
-  text-decoration: none; letter-spacing: 0.05em; opacity: .65; transition: opacity .15s;
+  text-decoration: none; letter-spacing: .05em; opacity: .6; transition: opacity .15s;
 }
 .byline:hover { opacity: 1; }
 
-/* ── Toolbar ── */
-.toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+/* ── Shared key section ──────────────────────────────── */
+.key-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.mode-toggle {
-  display: flex; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 4px; padding: 4px;
-}
-.mode-btn {
-  padding: 8px 20px; border: none; background: none; color: var(--muted);
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
-  border-radius: 2px; transition: all .15s;
-}
-.mode-btn.active { background: var(--accent); color: #fff; }
-.mode-btn:not(.active):hover { color: var(--text); }
-.toolbar-right { display: flex; gap: 8px; align-items: center; }
-.encoding-toggle {
-  display: flex; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 4px; padding: 3px;
-}
-.enc-btn {
-  padding: 5px 12px; border: none; background: none; color: var(--muted);
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
-  border-radius: 2px; transition: all .15s;
-}
-.enc-btn.active { background: rgba(108,99,255,.2); color: var(--accent); }
-.enc-btn:not(.active):hover { color: var(--text); }
-.btn-clear {
-  padding: 7px 13px; background: none; border: 1px solid var(--border); border-radius: 3px;
-  color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
-}
-.btn-clear:hover { border-color: var(--danger); color: var(--danger); }
-
-/* ── Card ── */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-.card-header {
-  padding: 13px 18px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 8px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--muted);
-}
-.card-header .dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot-red{background:#ff5f56} .dot-yellow{background:#ffbd2e} .dot-green{background:#27c93f}
-.field-group { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.field { display: flex; flex-direction: column; gap: 7px; }
-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+.key-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .15em;
   text-transform: uppercase; color: var(--muted);
   display: flex; align-items: center; gap: 8px;
 }
-label .hint { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; color: #3a3a5a; }
+.key-section-label .hint {
+  font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; color: #3a3a5a;
+}
+.key-row { display: flex; gap: 8px; align-items: stretch; }
+.key-wrapper { position: relative; flex: 1; }
+.key-wrapper input { padding-right: 92px; }
 input, textarea {
   width: 100%; background: var(--bg); border: 1px solid var(--border);
   border-radius: 4px; color: var(--text); font-family: var(--mono);
@@ -179,15 +150,9 @@ input, textarea {
 }
 input:focus, textarea:focus { border-color: var(--accent); }
 input::placeholder, textarea::placeholder { color: #2a2a4a; }
-textarea { min-height: 88px; line-height: 1.6; }
-
-/* ── Key row ── */
-.key-row { display: flex; gap: 8px; align-items: stretch; }
-.key-wrapper { position: relative; flex: 1; }
-.key-wrapper input { padding-right: 92px; }
 .key-status {
   position: absolute; right: 38px; top: 50%; transform: translateY(-50%);
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
   padding: 2px 7px; border-radius: 2px; pointer-events: none;
 }
 .key-status.valid   { color: var(--accent2); background: rgba(0,212,170,.1); }
@@ -201,44 +166,115 @@ textarea { min-height: 88px; line-height: 1.6; }
 .btn-gen {
   padding: 0 14px; background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.25);
   border-radius: 4px; color: var(--accent); font-family: var(--mono); font-size: 10px;
-  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
   white-space: nowrap; transition: all .15s; display: flex; align-items: center; gap: 5px;
 }
 .btn-gen:hover { background: rgba(108,99,255,.2); }
 
-/* ── Textarea + counter ── */
+/* ── Tab navigation ──────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 16px;
+  gap: 4px;
+}
+.tab-btn {
+  flex: 1; padding: 10px 16px; border: none; background: none; color: var(--muted);
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+  border-radius: 3px; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.tab-btn.active { background: var(--accent); color: #fff; }
+.tab-btn:not(.active):hover { color: var(--text); background: rgba(108,99,255,.06); }
+.tab-btn svg { opacity: .7; }
+.tab-btn.active svg { opacity: 1; }
+
+/* ── Tab panels ──────────────────────────────────────── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Card ────────────────────────────────────────────── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.card-header {
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+}
+.card-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-r{background:#ff5f56} .dot-y{background:#ffbd2e} .dot-g{background:#27c93f}
+.field-group { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+label {
+  font-size: 10px; font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px;
+}
+label .hint { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; color: #3a3a5a; }
+textarea { min-height: 90px; line-height: 1.6; }
 .textarea-wrapper { position: relative; }
 .char-count {
   position: absolute; bottom: 8px; right: 10px;
-  font-size: 9px; color: #2e2e50; letter-spacing: 0.05em; pointer-events: none;
+  font-size: 9px; color: #2e2e50; letter-spacing: .05em; pointer-events: none;
 }
 
-/* ── Encoding hint banner ── */
+/* ── Toolbar row ─────────────────────────────────────── */
+.toolbar-row {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+}
+.mode-toggle {
+  display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px;
+}
+.mode-btn {
+  padding: 7px 18px; border: none; background: none; color: var(--muted);
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+  border-radius: 2px; transition: all .15s;
+}
+.mode-btn.active { background: var(--accent); color: #fff; }
+.mode-btn:not(.active):hover { color: var(--text); }
+.row-right { display: flex; gap: 8px; align-items: center; }
+.encoding-toggle {
+  display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 3px;
+}
+.enc-btn {
+  padding: 5px 11px; border: none; background: none; color: var(--muted);
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all .15s;
+}
+.enc-btn.active { background: rgba(108,99,255,.2); color: var(--accent); }
+.enc-btn:not(.active):hover { color: var(--text); }
+.btn-clear {
+  padding: 7px 12px; background: none; border: 1px solid var(--border); border-radius: 3px;
+  color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-clear:hover { border-color: var(--danger); color: var(--danger); }
+
+/* ── Encoding hint ───────────────────────────────────── */
 .enc-hint {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,189,46,.06);
-  border: 1px solid rgba(255,189,46,.2);
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 11px;
-  color: var(--warn);
+  display: none; align-items: center; gap: 8px;
+  background: rgba(255,189,46,.06); border: 1px solid rgba(255,189,46,.2);
+  border-radius: 4px; padding: 8px 12px; font-size: 11px; color: var(--warn);
 }
 .enc-hint.visible { display: flex; }
 .enc-hint-btn {
   margin-left: auto; padding: 3px 10px; border-radius: 2px;
   background: rgba(255,189,46,.1); border: 1px solid rgba(255,189,46,.3);
   color: var(--warn); font-family: var(--mono); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
 }
 .enc-hint-btn:hover { background: rgba(255,189,46,.2); }
 
-/* ── Run button ── */
+/* ── Run button ──────────────────────────────────────── */
 .btn-run {
   width: 100%; padding: 13px; background: var(--accent); border: none;
   border-radius: 4px; color: white; font-family: var(--mono); font-size: 12px;
-  font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+  font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer;
   transition: background .15s, transform .1s; display: flex; align-items: center;
   justify-content: center; gap: 8px; position: relative; overflow: hidden;
 }
@@ -253,39 +289,38 @@ textarea { min-height: 88px; line-height: 1.6; }
 .btn-run:disabled { opacity: .45; cursor: not-allowed; }
 .spinner {
   width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
-  border-top-color: #fff; border-radius: 50%;
-  animation: spin .6s linear infinite; display: none; flex-shrink: 0;
+  border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite;
+  display: none; flex-shrink: 0;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .btn-run.loading .spinner { display: block; }
-.shortcut-hint { text-align: right; font-size: 9px; color: #2a2a45; letter-spacing: 0.08em; margin-top: -8px; }
+.shortcut-hint { text-align: right; font-size: 9px; color: #2a2a45; letter-spacing: .08em; margin-top: -8px; }
 
-/* ── Divider ── */
+/* ── Divider ─────────────────────────────────────────── */
 .divider { display: flex; align-items: center; gap: 12px; padding: 0 20px; }
 .divider-line { flex: 1; height: 1px; background: var(--border); }
-.divider-label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.divider-label { font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
 
-/* ── Output section ── */
+/* ── Text output ─────────────────────────────────────── */
 .output-section {
   opacity: 0; transform: translateY(6px); transition: all .25s ease;
   pointer-events: none; max-height: 0; overflow: hidden;
 }
 .output-section.visible {
-  opacity: 1; transform: translateY(0); pointer-events: all;
-  max-height: 2000px; overflow: visible;
+  opacity: 1; transform: translateY(0); pointer-events: all; max-height: 3000px; overflow: visible;
 }
 .output-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
-.output-label-text { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.output-label-text { font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
 .output-actions { display: flex; gap: 6px; }
 .out-btn {
   padding: 4px 10px; border-radius: 3px; font-family: var(--mono); font-size: 10px;
-  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
   transition: all .15s; border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
+  display: flex; align-items: center; gap: 5px;
 }
 .out-btn:hover { color: var(--text); border-color: var(--border-active); }
 .out-btn.success { color: var(--accent2); border-color: rgba(0,212,170,.3); background: rgba(0,212,170,.08); }
 .out-btn.danger-btn:hover { color: var(--danger); border-color: rgba(255,77,109,.3); }
-
 .output-box {
   background: rgba(0,212,170,.03); border: 1px solid rgba(0,212,170,.18);
   border-radius: 4px; padding: 12px 14px; font-size: 13px; color: var(--accent2);
@@ -293,20 +328,14 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .output-box.error-box { color: var(--danger); background: rgba(255,77,109,.03); border-color: rgba(255,77,109,.18); }
 .output-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
-.output-bytes { font-size: 9px; color: #2e2e52; letter-spacing: 0.06em; }
+.output-bytes { font-size: 9px; color: #2e2e52; letter-spacing: .06em; }
 
-/* ── JSON banner ── */
+/* ── JSON banner & panel ─────────────────────────────── */
 .json-banner {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  background: rgba(108,99,255,.07);
-  border: 1px solid rgba(108,99,255,.25);
-  border-radius: 4px;
-  padding: 9px 14px;
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--accent);
+  display: none; align-items: center; gap: 10px;
+  background: rgba(108,99,255,.07); border: 1px solid rgba(108,99,255,.25);
+  border-radius: 4px; padding: 9px 14px; margin-top: 10px;
+  font-size: 11px; color: var(--accent);
 }
 .json-banner.visible { display: flex; }
 .json-banner-icon { display: flex; align-items: center; flex-shrink: 0; color: var(--accent); }
@@ -316,59 +345,166 @@ textarea { min-height: 88px; line-height: 1.6; }
 .json-actions { display: flex; gap: 6px; flex-shrink: 0; }
 .json-btn {
   padding: 4px 10px; border-radius: 3px; font-family: var(--mono); font-size: 10px;
-  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
   transition: all .15s; border: 1px solid rgba(108,99,255,.3);
   background: rgba(108,99,255,.1); color: var(--accent);
 }
 .json-btn:hover { background: rgba(108,99,255,.2); }
 .json-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-/* ── JSON formatted panel ── */
-.json-panel {
-  display: none;
-  margin-top: 10px;
-  border: 1px solid rgba(108,99,255,.2);
-  border-radius: 4px;
-  overflow: hidden;
-}
+.json-panel { display: none; margin-top: 10px; border: 1px solid rgba(108,99,255,.2); border-radius: 4px; overflow: hidden; }
 .json-panel.visible { display: block; }
 .json-panel-header {
-  background: rgba(108,99,255,.06);
-  border-bottom: 1px solid rgba(108,99,255,.15);
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: rgba(108,99,255,.06); border-bottom: 1px solid rgba(108,99,255,.15);
+  padding: 8px 14px; display: flex; align-items: center; justify-content: space-between;
 }
-.json-panel-title {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--accent); opacity: .8;
-}
+.json-panel-title { font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); opacity: .8; }
 .json-panel-actions { display: flex; gap: 6px; }
 .json-pre {
   margin: 0; padding: 14px; background: rgba(108,99,255,.03);
   font-family: var(--mono); font-size: 12px; line-height: 1.7;
-  overflow-x: auto; max-height: 400px; overflow-y: auto; white-space: pre;
-  user-select: text;
+  overflow-x: auto; max-height: 400px; overflow-y: auto; white-space: pre; user-select: text;
 }
-/* JSON syntax colors */
-.json-key   { color: #a78bfa; }
-.json-str   { color: var(--accent2); }
-.json-num   { color: #f97316; }
-.json-bool  { color: var(--accent); }
-.json-null  { color: var(--muted); }
-.json-punct { color: #3a3a6a; }
+.json-key{color:#a78bfa} .json-str{color:var(--accent2)} .json-num{color:#f97316}
+.json-bool{color:var(--accent)} .json-null{color:var(--muted)} .json-punct{color:#3a3a6a}
 
-/* ── History ── */
+/* ── File drop zone ──────────────────────────────────── */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all .2s ease;
+  background: var(--surface3);
+  text-align: center;
+  position: relative;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(108,99,255,.04);
+}
+.drop-zone.drag-over { border-style: solid; }
+.drop-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; padding: 0;
+}
+.drop-icon { color: var(--muted); transition: color .2s; }
+.drop-zone:hover .drop-icon, .drop-zone.drag-over .drop-icon { color: var(--accent); }
+.drop-title { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: .02em; }
+.drop-sub { font-size: 11px; color: var(--muted); }
+.drop-limit { font-size: 10px; color: #3a3a5a; margin-top: 2px; }
+.drop-zone.has-file { border-style: solid; border-color: var(--accent2); background: rgba(0,212,170,.03); cursor: default; }
+.drop-zone.has-file .drop-icon { color: var(--accent2); }
+
+/* ── File info card ──────────────────────────────────── */
+.file-info {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0,212,170,.04);
+  border: 1px solid rgba(0,212,170,.2);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+.file-info.visible { display: flex; }
+.file-icon { color: var(--accent2); flex-shrink: 0; }
+.file-details { flex: 1; min-width: 0; }
+.file-name { font-size: 12px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-meta { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.file-remove {
+  background: none; border: none; cursor: pointer; color: var(--muted);
+  padding: 4px; display: flex; align-items: center; transition: color .15s; flex-shrink: 0;
+}
+.file-remove:hover { color: var(--danger); }
+
+/* ── Progress bar ────────────────────────────────────── */
+.progress-section {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+.progress-section.visible { display: flex; }
+.progress-bar-wrap {
+  background: var(--border);
+  border-radius: 99px;
+  height: 4px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  width: 0%;
+  transition: width .2s ease;
+}
+.progress-label { font-size: 10px; color: var(--muted); letter-spacing: .05em; }
+
+/* ── File result ─────────────────────────────────────── */
+.file-result {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.file-result.visible { display: flex; }
+.file-result-card {
+  background: rgba(0,212,170,.04);
+  border: 1px solid rgba(0,212,170,.2);
+  border-radius: 4px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.file-result-card.error-card {
+  background: rgba(255,77,109,.04);
+  border-color: rgba(255,77,109,.2);
+}
+.result-icon { flex-shrink: 0; }
+.result-icon.ok  { color: var(--accent2); }
+.result-icon.err { color: var(--danger); }
+.result-details { flex: 1; min-width: 0; }
+.result-title { font-size: 12px; font-weight: 700; color: var(--text); }
+.result-sub   { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.result-error { font-size: 11px; color: var(--danger); margin-top: 3px; line-height: 1.5; }
+.btn-download {
+  padding: 8px 16px; background: var(--accent2); border: none; border-radius: 4px;
+  color: #0a0a0f; font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;
+}
+.btn-download:hover { background: #00e8bb; }
+
+/* ── File size error ─────────────────────────────────── */
+.size-error {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,77,109,.06);
+  border: 1px solid rgba(255,77,109,.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--danger);
+}
+.size-error.visible { display: flex; }
+
+/* ── History ─────────────────────────────────────────── */
 .history-section { margin-top: 24px; }
-.history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.history-title { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.history-title {
+  font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+}
 .btn-clear-history {
   background: none; border: none; font-family: var(--mono); font-size: 9px;
-  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   color: #2e2e52; cursor: pointer; transition: color .15s;
 }
 .btn-clear-history:hover { color: var(--danger); }
+.history-note { font-size: 9px; color: #2a2a45; letter-spacing: .04em; margin-bottom: 10px; }
 .history-list { display: flex; flex-direction: column; gap: 6px; }
 .history-item {
   background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
@@ -377,40 +513,32 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .history-item:hover { border-color: var(--border-active); }
 .history-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
   padding: 2px 7px; border-radius: 2px; flex-shrink: 0;
 }
-.history-badge.enc { color: var(--accent); background: rgba(108,99,255,.12); }
+.history-badge.enc { color: var(--accent);  background: rgba(108,99,255,.12); }
 .history-badge.dec { color: var(--accent2); background: rgba(0,212,170,.1); }
+.history-badge.fenc { color: var(--warn);   background: rgba(255,189,46,.1); }
+.history-badge.fdec { color: #f97316;       background: rgba(249,115,22,.1); }
 .history-preview { font-size: 11px; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .history-time { font-size: 9px; color: #2e2e52; flex-shrink: 0; }
-.history-note { font-size: 9px; color: #2a2a45; margin-top: 4px; letter-spacing: 0.04em; }
 
-/* ── Star banner ── */
+/* ── Star banner ─────────────────────────────────────── */
 .star-banner {
-  margin-top: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: rgba(255,189,46,.04);
-  border: 1px solid rgba(255,189,46,.15);
-  border-radius: 4px;
-  padding: 12px 18px;
-  font-size: 12px;
-  color: var(--muted);
-  flex-wrap: wrap;
-  text-align: center;
+  margin-top: 28px; display: flex; align-items: center; justify-content: center;
+  gap: 10px; background: rgba(255,189,46,.04); border: 1px solid rgba(255,189,46,.14);
+  border-radius: 4px; padding: 12px 18px; font-size: 12px; color: var(--muted);
+  flex-wrap: wrap; text-align: center;
 }
 .star-banner a {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: var(--warn); text-decoration: none; font-weight: 700;
-  font-size: 12px; letter-spacing: 0.04em; transition: opacity .15s; opacity: .9;
+  display: inline-flex; align-items: center; gap: 6px; color: var(--warn);
+  text-decoration: none; font-weight: 700; font-size: 12px; letter-spacing: .04em;
+  transition: opacity .15s; opacity: .9;
 }
 .star-banner a:hover { opacity: 1; }
 .star-banner a svg { stroke: var(--warn); }
 
-/* ── Info strip ── */
+/* ── Info strip ──────────────────────────────────────── */
 .info-strip { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
 .info-chip {
   display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted);
@@ -418,37 +546,39 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .info-chip .ic-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
 
-/* ── Footer ── */
-.footer { margin-top: 36px; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+/* ── Footer ──────────────────────────────────────────── */
+.footer { margin-top: 36px; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .05em; }
 .footer a { color: var(--accent); text-decoration: none; opacity: .8; transition: opacity .15s; }
 .footer a:hover { opacity: 1; }
 .social-links { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 14px; }
 .social-links a {
   display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none;
   padding: 6px 14px; border: 1px solid var(--border); border-radius: 3px;
   background: var(--surface); transition: all .15s;
 }
 .social-links a:hover { color: var(--text); border-color: var(--border-active); background: rgba(108,99,255,.06); }
 
-/* ── Toast ── */
+/* ── Toast ───────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 28px; left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: var(--surface2); border: 1px solid var(--border-active); border-radius: 4px;
-  padding: 10px 18px; font-size: 12px; font-weight: 600; color: var(--text); letter-spacing: 0.05em;
+  padding: 10px 18px; font-size: 12px; font-weight: 600; color: var(--text); letter-spacing: .05em;
   opacity: 0; transition: all .25s ease; pointer-events: none; z-index: 999; white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-@media (max-width: 540px) {
-  .toolbar { flex-direction: column; align-items: flex-start; }
-  .toolbar-right { width: 100%; justify-content: space-between; }
+@media (max-width: 560px) {
+  .toolbar-row { flex-direction: column; align-items: flex-start; }
+  .row-right { width: 100%; justify-content: space-between; }
   .key-row { flex-direction: column; }
   .btn-gen { width: 100%; justify-content: center; padding: 10px; }
   .social-links { flex-direction: column; align-items: center; }
   .json-banner { flex-wrap: wrap; }
   .json-actions { width: 100%; }
+  .file-result-card { flex-wrap: wrap; }
+  .btn-download { width: 100%; justify-content: center; }
 }
 </style>
 </head>
@@ -458,177 +588,274 @@ textarea { min-height: 88px; line-height: 1.6; }
   <!-- Header -->
   <div class="header">
     <div class="badge">aes-256-cbc</div>
-    <h1>Cipher<span>.</span></h1>
-    <p class="subtitle">// browser-native &middot; zero network &middot; iv:ciphertext format</p>
+    <h1>x<span>enc</span></h1>
+    <p class="subtitle">// browser-native &middot; zero network &middot; text &amp; file encryption</p>
     <a class="byline" href="https://abubakarshaikh.dev" target="_blank" rel="noopener">abubakarshaikh.dev</a>
   </div>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <div class="mode-toggle">
-      <button class="mode-btn active" onclick="setMode('decrypt')" id="btn-decrypt">Decrypt</button>
-      <button class="mode-btn" onclick="setMode('encrypt')" id="btn-encrypt">Encrypt</button>
+  <!-- Shared key -->
+  <div class="key-section">
+    <div class="key-section-label">
+      Secret Key (hex)
+      <span class="hint">// shared across text &amp; file &middot; 64 hex chars = 32 bytes = AES-256</span>
     </div>
-    <div class="toolbar-right">
-      <div class="encoding-toggle" title="Output encoding format">
-        <button class="enc-btn active" onclick="setEncoding('hex')" id="enc-hex">Hex</button>
-        <button class="enc-btn" onclick="setEncoding('base64')" id="enc-b64">Base64</button>
+    <div class="key-row">
+      <div class="key-wrapper">
+        <input
+          type="password"
+          id="key-input"
+          placeholder="e.g. 4a7c3f2e1b9d8a5c..."
+          spellcheck="false"
+          autocomplete="off"
+          oninput="validateKey(this.value)"
+        />
+        <span class="key-status" id="key-status"></span>
+        <button class="key-eye" onclick="toggleKeyVisibility()" title="Show / hide key" type="button">
+          <svg id="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
       </div>
-      <button class="btn-clear" onclick="clearAll()">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>Clear
+      <button class="btn-gen" onclick="generateKey()" title="Generate a cryptographically random 256-bit key" type="button">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Gen Key
       </button>
     </div>
   </div>
 
-  <!-- Main card -->
-  <div class="card">
-    <div class="card-header">
-      <span class="dot dot-red"></span>
-      <span class="dot dot-yellow"></span>
-      <span class="dot dot-green"></span>
-      <span style="margin-left:6px" id="mode-label">Decrypt ciphertext</span>
+  <!-- Tab nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('text')" id="tab-text">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      Text
+    </button>
+    <button class="tab-btn" onclick="switchTab('file')" id="tab-file">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      File
+      <span style="font-size:9px;background:rgba(255,189,46,.15);color:var(--warn);padding:1px 5px;border-radius:2px;letter-spacing:.06em">.xenc</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════ TEXT TAB ═══════════════ -->
+  <div class="tab-panel active" id="panel-text">
+
+    <div class="toolbar-row">
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="setTextMode('decrypt')" id="tbtn-decrypt">Decrypt</button>
+        <button class="mode-btn" onclick="setTextMode('encrypt')" id="tbtn-encrypt">Encrypt</button>
+      </div>
+      <div class="row-right">
+        <div class="encoding-toggle" title="Ciphertext encoding">
+          <button class="enc-btn active" onclick="setEncoding('hex')"    id="enc-hex">Hex</button>
+          <button class="enc-btn"        onclick="setEncoding('base64')" id="enc-b64">Base64</button>
+        </div>
+        <button class="btn-clear" onclick="clearText()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Clear
+        </button>
+      </div>
     </div>
 
-    <div class="field-group">
-
-      <!-- Key -->
-      <div class="field">
-        <label>
-          Secret Key (hex)
-          <span class="hint">// 64 hex chars = 32 bytes = AES-256</span>
-        </label>
-        <div class="key-row">
-          <div class="key-wrapper">
-            <input
-              type="password"
-              id="key-input"
-              placeholder="e.g. 4a7c3f2e1b9d8a5c..."
-              spellcheck="false"
-              autocomplete="off"
-              oninput="validateKey(this.value)"
-            />
-            <span class="key-status" id="key-status"></span>
-            <button class="key-eye" onclick="toggleKeyVisibility()" title="Show / hide key" type="button">
-              <svg id="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </button>
+    <div class="card">
+      <div class="card-header">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span style="margin-left:6px" id="text-mode-label">Decrypt ciphertext</span>
+      </div>
+      <div class="field-group">
+        <div class="field">
+          <label id="text-input-label">Ciphertext <span class="hint">// iv_hex:encrypted_hex</span></label>
+          <div class="textarea-wrapper">
+            <textarea id="text-input" placeholder="a1b2c3...:d4e5f6..." spellcheck="false"
+              oninput="updateCharCount()" onpaste="handlePaste(event)"></textarea>
+            <span class="char-count" id="char-count"></span>
           </div>
-          <button class="btn-gen" onclick="generateKey()" title="Generate a cryptographically random 256-bit key" type="button">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            Gen Key
-          </button>
+          <div class="enc-hint" id="enc-hint">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="enc-hint-text">Looks like Base64 — switch?</span>
+            <button class="enc-hint-btn" onclick="acceptEncodingHint()" type="button">Switch</button>
+          </div>
         </div>
+        <button class="btn-run" id="text-run-btn" onclick="runText()" type="button">
+          <div class="spinner" id="text-spinner"></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span id="text-btn-label">Run Decrypt</span>
+        </button>
+        <div class="shortcut-hint">Ctrl + Enter to run</div>
       </div>
 
-      <!-- Input text -->
-      <div class="field">
-        <label id="input-label">Ciphertext <span class="hint">// iv_hex:encrypted_hex</span></label>
-        <div class="textarea-wrapper">
-          <textarea
-            id="text-input"
-            placeholder="a1b2c3...:d4e5f6..."
-            spellcheck="false"
-            oninput="updateCharCount()"
-            onpaste="handlePaste(event)"
-          ></textarea>
-          <span class="char-count" id="char-count"></span>
-        </div>
-        <!-- Auto-detect hint -->
-        <div class="enc-hint" id="enc-hint">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span id="enc-hint-text">Looks like Base64 encoding — switch?</span>
-          <button class="enc-hint-btn" id="enc-hint-btn" onclick="acceptEncodingHint()" type="button">Switch</button>
-        </div>
-      </div>
+      <div class="divider"><div class="divider-line"></div><span class="divider-label">output</span><div class="divider-line"></div></div>
 
-      <button class="btn-run" id="run-btn" onclick="run()" type="button">
-        <div class="spinner" id="spinner"></div>
-        <svg id="zap-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        <span id="btn-label">Run Decrypt</span>
-      </button>
-      <div class="shortcut-hint">Ctrl + Enter to run</div>
-
-    </div>
-
-    <!-- Divider -->
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span class="divider-label">output</span>
-      <div class="divider-line"></div>
-    </div>
-
-    <!-- Output -->
-    <div class="field-group">
-      <div class="output-section" id="output-section">
-
-        <div class="output-meta">
-          <span class="output-label-text" id="output-label">Result</span>
-          <div class="output-actions">
-            <button class="out-btn" id="swap-btn" onclick="swapToInput()" title="Load output as new input and flip mode">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:3px"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Swap
-            </button>
-            <button class="out-btn" id="copy-btn" onclick="copyRaw()">Copy</button>
-          </div>
-        </div>
-
-        <div class="output-box" id="output-text"></div>
-
-        <div class="output-footer">
-          <span class="output-bytes" id="output-bytes"></span>
-        </div>
-
-        <!-- JSON Detection Banner -->
-        <div class="json-banner" id="json-banner">
-          <span class="json-banner-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>
-          </span>
-          <div class="json-banner-text">
-            <strong>JSON detected</strong>
-            <span>&nbsp;— pretty-print or minify</span>
-          </div>
-          <div class="json-actions">
-            <button class="json-btn" id="json-format-btn" onclick="toggleJsonFormat()" type="button">Format</button>
-            <button class="json-btn" id="json-minify-btn" onclick="toggleJsonMinify()" type="button">Minify</button>
-          </div>
-        </div>
-
-        <!-- JSON Formatted Panel -->
-        <div class="json-panel" id="json-panel">
-          <div class="json-panel-header">
-            <span class="json-panel-title" id="json-panel-title">Formatted JSON</span>
-            <div class="json-panel-actions">
-              <button class="out-btn" id="copy-json-btn" onclick="copyJson()" type="button">Copy JSON</button>
-              <button class="out-btn danger-btn" onclick="closeJsonPanel()" type="button">Close</button>
+      <div class="field-group">
+        <div class="output-section" id="text-output-section">
+          <div class="output-meta">
+            <span class="output-label-text" id="text-output-label">Result</span>
+            <div class="output-actions">
+              <button class="out-btn" id="swap-btn" onclick="swapToInput()" title="Load output as input, flip mode">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                Swap
+              </button>
+              <button class="out-btn" id="text-copy-btn" onclick="copyRaw()">Copy</button>
             </div>
           </div>
-          <pre class="json-pre" id="json-pre"></pre>
+          <div class="output-box" id="text-output-box"></div>
+          <div class="output-footer">
+            <span class="output-bytes" id="output-bytes"></span>
+          </div>
+          <!-- JSON banner -->
+          <div class="json-banner" id="json-banner">
+            <span class="json-banner-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>
+            </span>
+            <div class="json-banner-text"><strong>JSON detected</strong><span> &mdash; pretty-print or minify</span></div>
+            <div class="json-actions">
+              <button class="json-btn" id="json-format-btn" onclick="toggleJsonFormat()" type="button">Format</button>
+              <button class="json-btn" id="json-minify-btn" onclick="toggleJsonMinify()" type="button">Minify</button>
+            </div>
+          </div>
+          <!-- JSON panel -->
+          <div class="json-panel" id="json-panel">
+            <div class="json-panel-header">
+              <span class="json-panel-title" id="json-panel-title">Formatted JSON</span>
+              <div class="json-panel-actions">
+                <button class="out-btn" id="copy-json-btn" onclick="copyJson()" type="button">Copy JSON</button>
+                <button class="out-btn danger-btn" onclick="closeJsonPanel()" type="button">Close</button>
+              </div>
+            </div>
+            <pre class="json-pre" id="json-pre"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text history -->
+    <div class="history-section" id="text-history-section" style="display:none">
+      <div class="history-header">
+        <span class="history-title">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Recent Operations
+          <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#2e2e52">(session only)</span>
+        </span>
+        <button class="btn-clear-history" onclick="clearHistory('text')">Clear</button>
+      </div>
+      <p class="history-note">Click to restore input. Clears when tab closes.</p>
+      <div class="history-list" id="text-history-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FILE TAB ═══════════════ -->
+  <div class="tab-panel" id="panel-file">
+
+    <div class="toolbar-row">
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="setFileMode('encrypt')" id="fbtn-encrypt">Encrypt file</button>
+        <button class="mode-btn"        onclick="setFileMode('decrypt')" id="fbtn-decrypt">Decrypt .xenc</button>
+      </div>
+      <div class="row-right">
+        <button class="btn-clear" onclick="clearFile()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span style="margin-left:6px" id="file-mode-label">Encrypt a file &rarr; download as .xenc</span>
+      </div>
+      <div class="field-group">
+
+        <!-- Drop zone -->
+        <div class="field">
+          <label id="file-input-label">
+            File
+            <span class="hint" id="file-input-hint">// any file up to 10 MB</span>
+          </label>
+          <div class="drop-zone" id="drop-zone"
+            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+            <input type="file" id="file-input" onchange="onFileSelect(event)" />
+            <svg class="drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" id="drop-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="drop-title" id="drop-title">Drop a file or click to browse</div>
+            <div class="drop-sub" id="drop-sub">Any format accepted</div>
+            <div class="drop-limit">Max 10 MB</div>
+          </div>
+          <!-- Size error -->
+          <div class="size-error" id="size-error">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="size-error-text">File exceeds 10 MB limit.</span>
+          </div>
+        </div>
+
+        <!-- File info -->
+        <div class="file-info" id="file-info">
+          <svg class="file-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="file-info-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div class="file-details">
+            <div class="file-name" id="file-name-display">filename.txt</div>
+            <div class="file-meta" id="file-meta-display">0 KB</div>
+          </div>
+          <button class="file-remove" onclick="clearFile()" title="Remove file" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Run -->
+        <button class="btn-run" id="file-run-btn" onclick="runFile()" type="button">
+          <div class="spinner" id="file-spinner"></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" id="file-run-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span id="file-btn-label">Encrypt &amp; Download</span>
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-section" id="progress-section">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+          </div>
+          <span class="progress-label" id="progress-label">Processing...</span>
+        </div>
+
+        <!-- File result -->
+        <div class="file-result" id="file-result">
+          <div class="file-result-card" id="file-result-card">
+            <div class="result-icon" id="result-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="result-details">
+              <div class="result-title" id="result-title">Done</div>
+              <div class="result-sub"   id="result-sub"></div>
+              <div class="result-error" id="result-error" style="display:none"></div>
+            </div>
+            <button class="btn-download" id="btn-download" onclick="triggerDownload()" type="button" style="display:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+          </div>
         </div>
 
       </div>
     </div>
-  </div>
 
-  <!-- History -->
-  <div class="history-section" id="history-section" style="display:none">
-    <div class="history-header">
-      <span class="history-title">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Recent Operations <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#2e2e52">(session only)</span>
-      </span>
-      <button class="btn-clear-history" onclick="clearHistory()">Clear history</button>
+    <!-- File history -->
+    <div class="history-section" id="file-history-section" style="display:none">
+      <div class="history-header">
+        <span class="history-title">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          File Operations
+          <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#2e2e52">(session only)</span>
+        </span>
+        <button class="btn-clear-history" onclick="clearHistory('file')">Clear</button>
+      </div>
+      <p class="history-note">Log of files processed this session.</p>
+      <div class="history-list" id="file-history-list"></div>
     </div>
-    <p class="history-note">Click any item to reload the input. History clears when you close the tab.</p>
-    <br>
-    <div class="history-list" id="history-list"></div>
   </div>
 
   <!-- Star banner -->
   <div class="star-banner">
-    <span>Built something useful with this?</span>
-    <a href="https://github.com/abubakar-shaikh-dev/cipher" target="_blank" rel="noopener noreferrer">
+    <span>Found xenc useful? It's open source.</span>
+    <a href="https://github.com/abubakar-shaikh-dev/xenc" target="_blank" rel="noopener noreferrer">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Leave a star on GitHub — it takes 2 seconds
+      Star the repo on GitHub
     </a>
   </div>
 
@@ -639,6 +866,7 @@ textarea { min-height: 88px; line-height: 1.6; }
     <div class="info-chip"><span class="ic-dot"></span> Web Crypto API</div>
     <div class="info-chip"><span class="ic-dot"></span> 100% in-browser</div>
     <div class="info-chip"><span class="ic-dot"></span> Hex &amp; Base64</div>
+    <div class="info-chip"><span class="ic-dot"></span> .xenc file format</div>
     <div class="info-chip"><span class="ic-dot"></span> JSON formatter</div>
   </div>
 
@@ -658,90 +886,54 @@ textarea { min-height: 88px; line-height: 1.6; }
   </div>
 
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ─────────────────────────────────────────────
-let currentMode     = 'decrypt';
-let currentEncoding = 'hex';
+'use strict';
+
+/* ═══════════════════════════════════════════════
+   SHARED STATE
+═══════════════════════════════════════════════ */
 let keyVisible      = false;
-let lastRawOutput   = '';       // always holds the raw decrypted/encrypted text
-let lastParsedJson  = null;     // holds parsed JSON if detected
-let jsonPanelMode   = null;     // 'format' | 'minify' | null
-let suggestedEncoding = null;   // for paste-detect hint
-const MAX_HISTORY   = 5;
+let currentTab      = 'text';
 
-// ── Mode ──────────────────────────────────────────────
-function setMode(mode) {
-  currentMode = mode;
-  document.getElementById('btn-decrypt').classList.toggle('active', mode === 'decrypt');
-  document.getElementById('btn-encrypt').classList.toggle('active', mode === 'encrypt');
-  document.getElementById('mode-label').textContent = mode === 'decrypt' ? 'Decrypt ciphertext' : 'Encrypt plaintext';
-  document.getElementById('btn-label').textContent  = mode === 'decrypt' ? 'Run Decrypt' : 'Run Encrypt';
-  const hint = mode === 'decrypt'
-    ? `<span class="hint">// ${currentEncoding === 'hex' ? 'iv_hex:encrypted_hex' : 'base64_iv:base64_cipher'}</span>`
-    : `<span class="hint">// any plaintext string</span>`;
-  document.getElementById('input-label').innerHTML = (mode === 'decrypt' ? 'Ciphertext ' : 'Plaintext ') + hint;
-  document.getElementById('text-input').placeholder = mode === 'decrypt'
-    ? (currentEncoding === 'hex' ? 'a1b2c3...:d4e5f6...' : 'aGVsbG8=:d4e5Z...')
-    : 'Enter the text you want to encrypt...';
-  hideOutput();
-  hideEncHint();
+// Text state
+let textMode        = 'decrypt';
+let textEncoding    = 'hex';
+let lastRawOutput   = '';
+let lastParsedJson  = null;
+let jsonPanelMode   = null;
+let suggestedEnc    = null;
+
+// File state
+let fileMode        = 'encrypt';
+let selectedFile    = null;
+let pendingBlob     = null;    // the result blob ready to download
+let pendingFileName = '';      // the filename for the download
+
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_HISTORY    = 6;
+
+/* ═══════════════════════════════════════════════
+   TAB
+═══════════════════════════════════════════════ */
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-text').classList.toggle('active', tab === 'text');
+  document.getElementById('tab-file').classList.toggle('active', tab === 'file');
+  document.getElementById('panel-text').classList.toggle('active', tab === 'text');
+  document.getElementById('panel-file').classList.toggle('active', tab === 'file');
 }
 
-// ── Encoding ──────────────────────────────────────────
-function setEncoding(enc) {
-  currentEncoding = enc;
-  document.getElementById('enc-hex').classList.toggle('active', enc === 'hex');
-  document.getElementById('enc-b64').classList.toggle('active', enc === 'base64');
-  setMode(currentMode);
-  hideEncHint();
-}
-
-function hideEncHint() {
-  document.getElementById('enc-hint').classList.remove('visible');
-  suggestedEncoding = null;
-}
-
-function acceptEncodingHint() {
-  if (suggestedEncoding) setEncoding(suggestedEncoding);
-}
-
-// ── Paste auto-detect encoding ─────────────────────────
-function handlePaste(e) {
-  if (currentMode !== 'decrypt') return;
-  // Wait a tick for the value to update
-  setTimeout(() => {
-    const val = document.getElementById('text-input').value.trim();
-    if (!val.includes(':')) return;
-    const sep    = val.indexOf(':');
-    const ivPart = val.slice(0, sep);
-
-    // Pure hex detection: even length, only 0-9a-f, length == 32 (16 bytes IV)
-    const isHexIV = /^[0-9a-fA-F]{32}$/.test(ivPart);
-    // Base64 detection: contains non-hex chars like g-z A-F after 'f', +, /, =
-    const isB64IV = /[g-zG-Z+/=]/.test(ivPart) && ivPart.length > 0;
-
-    if (isHexIV && currentEncoding !== 'hex') {
-      suggestedEncoding = 'hex';
-      document.getElementById('enc-hint-text').textContent = 'Input looks like Hex encoding — switch?';
-      document.getElementById('enc-hint').classList.add('visible');
-    } else if (isB64IV && currentEncoding !== 'base64') {
-      suggestedEncoding = 'base64';
-      document.getElementById('enc-hint-text').textContent = 'Input looks like Base64 encoding — switch?';
-      document.getElementById('enc-hint').classList.add('visible');
-    }
-  }, 0);
-}
-
-// ── Key ───────────────────────────────────────────────
+/* ═══════════════════════════════════════════════
+   SHARED KEY
+═══════════════════════════════════════════════ */
 function validateKey(val) {
-  const status = document.getElementById('key-status');
-  if (!val) { status.textContent = ''; status.className = 'key-status'; return; }
-  const valid = /^[0-9a-fA-F]{64}$/.test(val);
-  status.textContent = valid ? '32B \u2713' : `${val.length}/64`;
-  status.className = 'key-status ' + (valid ? 'valid' : 'invalid');
+  const s = document.getElementById('key-status');
+  if (!val) { s.textContent = ''; s.className = 'key-status'; return; }
+  const ok = /^[0-9a-fA-F]{64}$/.test(val);
+  s.textContent = ok ? '32B \u2713' : `${val.length}/64`;
+  s.className = 'key-status ' + (ok ? 'valid' : 'invalid');
 }
 
 function toggleKeyVisibility() {
@@ -755,26 +947,37 @@ function toggleKeyVisibility() {
 function generateKey() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   const hex   = Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
-  const input = document.getElementById('key-input');
-  input.value = hex;
+  document.getElementById('key-input').value = hex;
   validateKey(hex);
   showToast('New 256-bit key generated \u2014 save it somewhere safe');
 }
 
-// ── Char counter ──────────────────────────────────────
-function updateCharCount() {
-  const val = document.getElementById('text-input').value;
-  document.getElementById('char-count').textContent = val.length > 0 ? `${val.length} chars` : '';
+function getKeyHex() {
+  return document.getElementById('key-input').value.trim();
 }
 
-// ── Crypto helpers ────────────────────────────────────
+function assertKeyValid(keyHex) {
+  if (!keyHex)
+    throw new Error('Secret key is required.');
+  if (!/^[0-9a-fA-F]{64}$/.test(keyHex))
+    throw new Error(`Key is ${keyHex.length} chars — must be exactly 64 hex characters (32 bytes).`);
+}
+
+async function importKey(hexKey) {
+  const raw = hexToBytes(hexKey);
+  return crypto.subtle.importKey('raw', raw, { name: 'AES-CBC' }, false, ['encrypt', 'decrypt']);
+}
+
+/* ═══════════════════════════════════════════════
+   CRYPTO HELPERS
+═══════════════════════════════════════════════ */
 function hexToBytes(hex) {
   const clean = hex.replace(/\s/g, '');
-  if (!/^[0-9a-fA-F]*$/.test(clean)) throw new Error('Non-hex characters found in the ciphertext');
-  if (clean.length % 2 !== 0)         throw new Error('Odd-length hex string \u2014 probably truncated ciphertext');
+  if (!/^[0-9a-fA-F]*$/.test(clean)) throw new Error('Non-hex characters found in ciphertext');
+  if (clean.length % 2 !== 0)        throw new Error('Odd-length hex string \u2014 ciphertext may be truncated');
   const arr = new Uint8Array(clean.length / 2);
   for (let i = 0; i < clean.length; i += 2)
-    arr[i/2] = parseInt(clean.substr(i,2), 16);
+    arr[i/2] = parseInt(clean.substr(i, 2), 16);
   return arr;
 }
 
@@ -782,13 +985,12 @@ function bytesToHex(bytes) {
   return Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// Fixed: chunked to avoid call stack overflow on large arrays
 function bytesToBase64(bytes) {
+  // Chunked to avoid call-stack overflow on large arrays
   let bin = '';
-  const chunk = 8192;
-  for (let i = 0; i < bytes.length; i += chunk) {
-    bin += String.fromCharCode(...bytes.slice(i, i + chunk));
-  }
+  const CHUNK = 8192;
+  for (let i = 0; i < bytes.length; i += CHUNK)
+    bin += String.fromCharCode(...bytes.slice(i, i + CHUNK));
   return btoa(bin);
 }
 
@@ -796,199 +998,242 @@ function base64ToBytes(b64) {
   const clean = b64.replace(/\s/g, '');
   let bin;
   try { bin = atob(clean); }
-  catch { throw new Error('Invalid Base64 string \u2014 check for missing padding or wrong characters'); }
+  catch { throw new Error('Invalid Base64 \u2014 check for missing padding or wrong characters'); }
   return new Uint8Array([...bin].map(c => c.charCodeAt(0)));
 }
 
-function encodeOutput(ivBytes, cipherBuffer) {
-  const cipherBytes = new Uint8Array(cipherBuffer);
-  return currentEncoding === 'hex'
-    ? bytesToHex(ivBytes) + ':' + bytesToHex(cipherBytes)
-    : bytesToBase64(ivBytes) + ':' + bytesToBase64(cipherBytes);
+function encodeTextOutput(ivBytes, cipherBuffer) {
+  const c = new Uint8Array(cipherBuffer);
+  return textEncoding === 'hex'
+    ? bytesToHex(ivBytes) + ':' + bytesToHex(c)
+    : bytesToBase64(ivBytes) + ':' + bytesToBase64(c);
 }
 
-function decodeInput(text) {
+function decodeTextInput(text) {
   const clean = text.trim();
   const sep   = clean.indexOf(':');
-  if (sep === -1)
-    throw new Error('Invalid format \u2014 expected iv:ciphertext separated by a colon (:)');
+  if (sep === -1) throw new Error('Invalid format \u2014 expected iv:ciphertext separated by a colon');
   const ivPart  = clean.slice(0, sep);
   const encPart = clean.slice(sep + 1);
-  if (!ivPart)  throw new Error('IV part is empty \u2014 check the format');
-  if (!encPart) throw new Error('Ciphertext part is empty \u2014 check the format');
-  if (currentEncoding === 'hex') {
-    const iv     = hexToBytes(ivPart);
-    const cipher = hexToBytes(encPart);
-    if (iv.length !== 16) throw new Error(`IV must be 16 bytes (32 hex chars), got ${iv.length} bytes`);
-    return { iv, cipher };
-  }
-  const iv     = base64ToBytes(ivPart);
-  const cipher = base64ToBytes(encPart);
-  if (iv.length !== 16) throw new Error(`IV must be 16 bytes, got ${iv.length} bytes \u2014 wrong encoding mode?`);
+  if (!ivPart)  throw new Error('IV part is empty \u2014 check format');
+  if (!encPart) throw new Error('Ciphertext part is empty \u2014 check format');
+  const iv     = textEncoding === 'hex' ? hexToBytes(ivPart)    : base64ToBytes(ivPart);
+  const cipher = textEncoding === 'hex' ? hexToBytes(encPart)   : base64ToBytes(encPart);
+  if (iv.length !== 16)
+    throw new Error(`IV must be 16 bytes, got ${iv.length} \u2014 wrong encoding mode?`);
   return { iv, cipher };
 }
 
-async function getKey(hexKey) {
-  const raw = hexToBytes(hexKey);
-  return crypto.subtle.importKey('raw', raw, { name: 'AES-CBC' }, false, ['encrypt', 'decrypt']);
+/* ═══════════════════════════════════════════════
+   TEXT TAB
+═══════════════════════════════════════════════ */
+function setTextMode(mode) {
+  textMode = mode;
+  document.getElementById('tbtn-decrypt').classList.toggle('active', mode === 'decrypt');
+  document.getElementById('tbtn-encrypt').classList.toggle('active', mode === 'encrypt');
+  document.getElementById('text-mode-label').textContent = mode === 'decrypt' ? 'Decrypt ciphertext' : 'Encrypt plaintext';
+  document.getElementById('text-btn-label').textContent  = mode === 'decrypt' ? 'Run Decrypt' : 'Run Encrypt';
+  const hint = mode === 'decrypt'
+    ? `<span class="hint">// ${textEncoding === 'hex' ? 'iv_hex:encrypted_hex' : 'base64_iv:base64_cipher'}</span>`
+    : `<span class="hint">// any plaintext string</span>`;
+  document.getElementById('text-input-label').innerHTML = (mode === 'decrypt' ? 'Ciphertext ' : 'Plaintext ') + hint;
+  document.getElementById('text-input').placeholder = mode === 'decrypt'
+    ? (textEncoding === 'hex' ? 'a1b2c3...:d4e5f6...' : 'aGVsbG8=:d4e5Z...')
+    : 'Enter text to encrypt...';
+  hideTextOutput();
+  hideEncHint();
 }
 
-// ── Run ───────────────────────────────────────────────
-async function run() {
-  const keyHex = document.getElementById('key-input').value.trim();
-  const input  = document.getElementById('text-input').value.trim();
-
-  if (!keyHex && !input) return showOutput('Enter your secret key and ciphertext to begin.', true);
-  if (!keyHex)           return showOutput('Secret key is required.', true);
-  if (!input)            return showOutput('Input text is required.', true);
-  if (!/^[0-9a-fA-F]{64}$/.test(keyHex))
-    return showOutput(`Key is ${keyHex.length} chars — must be exactly 64 hex characters (32 bytes for AES-256).`, true);
-
-  setLoading(true);
+function setEncoding(enc) {
+  textEncoding = enc;
+  document.getElementById('enc-hex').classList.toggle('active', enc === 'hex');
+  document.getElementById('enc-b64').classList.toggle('active', enc === 'base64');
+  setTextMode(textMode);
   hideEncHint();
+}
 
+function hideEncHint() {
+  document.getElementById('enc-hint').classList.remove('visible');
+  suggestedEnc = null;
+}
+
+function acceptEncodingHint() {
+  if (suggestedEnc) setEncoding(suggestedEnc);
+}
+
+function handlePaste(e) {
+  if (textMode !== 'decrypt') return;
+  setTimeout(() => {
+    const val = document.getElementById('text-input').value.trim();
+    if (!val.includes(':')) return;
+    const ivPart = val.slice(0, val.indexOf(':'));
+    const isHex  = /^[0-9a-fA-F]{32}$/.test(ivPart);
+    const isB64  = /[g-zG-Z+/=]/.test(ivPart) && ivPart.length > 0;
+    if (isHex && textEncoding !== 'hex') {
+      suggestedEnc = 'hex';
+      document.getElementById('enc-hint-text').textContent = 'Looks like Hex encoding \u2014 switch?';
+      document.getElementById('enc-hint').classList.add('visible');
+    } else if (isB64 && textEncoding !== 'base64') {
+      suggestedEnc = 'base64';
+      document.getElementById('enc-hint-text').textContent = 'Looks like Base64 encoding \u2014 switch?';
+      document.getElementById('enc-hint').classList.add('visible');
+    }
+  }, 0);
+}
+
+function updateCharCount() {
+  const v = document.getElementById('text-input').value;
+  document.getElementById('char-count').textContent = v.length > 0 ? `${v.length} chars` : '';
+}
+
+async function runText() {
+  const keyHex = getKeyHex();
+  const input  = document.getElementById('text-input').value.trim();
   try {
-    const key = await getKey(keyHex);
-
-    if (currentMode === 'decrypt') {
-      const { iv, cipher } = decodeInput(input);
-      const decrypted = await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, cipher);
-      const result    = new TextDecoder('utf-8').decode(decrypted);
-      if (result.length === 0) {
-        showOutput('Decryption succeeded but the result is empty.', false, 'dec');
-      } else {
-        showOutput(result, false, 'dec');
-        detectJson(result);
-      }
-      saveHistory('dec', input, result);
-
+    assertKeyValid(keyHex);
+    if (!input) throw new Error('Input text is required.');
+    setTextLoading(true);
+    const key = await importKey(keyHex);
+    if (textMode === 'decrypt') {
+      const { iv, cipher } = decodeTextInput(input);
+      const raw    = await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, cipher);
+      const result = new TextDecoder('utf-8').decode(raw);
+      showTextOutput(result, false, 'dec');
+      if (result.length > 0) detectJson(result);
+      saveHistory('text', { type: 'dec', input, output: result });
     } else {
       const iv        = crypto.getRandomValues(new Uint8Array(16));
-      const encoded   = new TextEncoder().encode(input);
-      const encrypted = await crypto.subtle.encrypt({ name: 'AES-CBC', iv }, key, encoded);
-      const result    = encodeOutput(iv, encrypted);
-      showOutput(result, false, 'enc');
-      saveHistory('enc', input, result);
+      const encrypted = await crypto.subtle.encrypt(
+        { name: 'AES-CBC', iv }, key, new TextEncoder().encode(input)
+      );
+      const result = encodeTextOutput(iv, encrypted);
+      showTextOutput(result, false, 'enc');
+      saveHistory('text', { type: 'enc', input, output: result });
     }
-
-  } catch (e) {
-    // Targeted error messages
+  } catch(e) {
     let msg = e.message || '';
     if (!msg || msg.includes('operation-specific') || msg.includes('OperationError')) {
-      if (currentMode === 'decrypt') {
-        msg = 'Decryption failed \u2014 the key is wrong, ciphertext is corrupted, or the encoding mode is mismatched. '
-            + (currentEncoding === 'hex' ? 'Try switching to Base64.' : 'Try switching to Hex.');
-      } else {
-        msg = 'Encryption failed \u2014 unexpected error.';
-      }
+      msg = textMode === 'decrypt'
+        ? `Decryption failed \u2014 wrong key or corrupted ciphertext. ${textEncoding === 'hex' ? 'Try Base64 mode.' : 'Try Hex mode.'}`
+        : 'Encryption failed \u2014 unexpected error.';
     }
-    showOutput(msg, true);
+    showTextOutput(msg, true);
   } finally {
-    setLoading(false);
+    setTextLoading(false);
   }
 }
 
-function setLoading(on) {
-  const btn = document.getElementById('run-btn');
+function setTextLoading(on) {
+  const btn = document.getElementById('text-run-btn');
   btn.disabled = on;
   btn.classList.toggle('loading', on);
-  // spinner visibility is driven purely by CSS class — no inline style conflict
 }
 
-// ── Output ────────────────────────────────────────────
-function showOutput(text, isError, type) {
-  const section = document.getElementById('output-section');
-  const box     = document.getElementById('output-text');
-  const bytes   = document.getElementById('output-bytes');
-  const swapBtn = document.getElementById('swap-btn');
-  const copyBtn = document.getElementById('copy-btn');
-
-  // Always reset JSON state when new output arrives
-  lastParsedJson = null;
-  jsonPanelMode  = null;
+function showTextOutput(text, isError, type) {
+  // Reset JSON state
+  lastParsedJson = null; jsonPanelMode = null;
   closeJsonPanel();
   document.getElementById('json-banner').classList.remove('visible');
-
   lastRawOutput = isError ? '' : text;
 
-  box.textContent  = text;
-  box.className    = 'output-box' + (isError ? ' error-box' : '');
+  const box     = document.getElementById('text-output-box');
+  const section = document.getElementById('text-output-section');
+  const bytes   = document.getElementById('output-bytes');
+  const swapBtn = document.getElementById('swap-btn');
+  const copyBtn = document.getElementById('text-copy-btn');
+
+  box.textContent = text;
+  box.className   = 'output-box' + (isError ? ' error-box' : '');
 
   if (!isError) {
-    const byteLen = new TextEncoder().encode(text).length;
-    bytes.textContent = `${text.length} chars \u00B7 ${byteLen} bytes`;
-    swapBtn.style.display = 'inline-block';
-    copyBtn.style.display = 'inline-block';
-    document.getElementById('output-label').textContent =
+    const bl = new TextEncoder().encode(text).length;
+    bytes.textContent = `${text.length} chars \u00B7 ${bl} bytes`;
+    swapBtn.style.display = 'inline-flex';
+    copyBtn.style.display = 'inline-flex';
+    document.getElementById('text-output-label').textContent =
       type === 'enc' ? 'Encrypted Output' : 'Decrypted Output';
   } else {
-    bytes.textContent       = '';
-    swapBtn.style.display   = 'none';
-    copyBtn.style.display   = 'none';
-    document.getElementById('output-label').textContent = 'Error';
+    bytes.textContent = '';
+    swapBtn.style.display = 'none';
+    copyBtn.style.display = 'none';
+    document.getElementById('text-output-label').textContent = 'Error';
   }
 
   copyBtn.textContent = 'Copy';
   copyBtn.className   = 'out-btn';
-
   section.classList.add('visible');
   setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
 }
 
-function hideOutput() {
-  lastRawOutput  = '';
-  lastParsedJson = null;
-  jsonPanelMode  = null;
+function hideTextOutput() {
+  lastRawOutput = ''; lastParsedJson = null; jsonPanelMode = null;
   closeJsonPanel();
   document.getElementById('json-banner').classList.remove('visible');
-  document.getElementById('output-section').classList.remove('visible');
+  document.getElementById('text-output-section').classList.remove('visible');
 }
 
-// ── JSON Detection ─────────────────────────────────────
-function detectJson(text) {
-  const trimmed = text.trim();
-  // Only suggest format for objects and arrays, not bare strings/numbers/booleans
-  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) return;
+function clearText() {
+  document.getElementById('text-input').value = '';
+  document.getElementById('char-count').textContent = '';
+  hideTextOutput(); hideEncHint();
+  showToast('Cleared');
+}
+
+async function copyRaw() {
+  if (!lastRawOutput) return;
   try {
-    const parsed = JSON.parse(trimmed);
-    if (typeof parsed !== 'object' || parsed === null) return; // skip primitives
+    await navigator.clipboard.writeText(lastRawOutput);
+    const btn = document.getElementById('text-copy-btn');
+    btn.textContent = 'Copied \u2713';
+    btn.classList.add('success');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('success'); }, 2000);
+  } catch { showToast('Copy failed \u2014 select manually'); }
+}
+
+function swapToInput() {
+  if (!lastRawOutput) return;
+  document.getElementById('text-input').value = lastRawOutput;
+  updateCharCount();
+  setTextMode(textMode === 'encrypt' ? 'decrypt' : 'encrypt');
+  hideTextOutput();
+  showToast('Output \u2192 input \u00B7 mode flipped');
+  document.getElementById('text-input').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ═══════════════════════════════════════════════
+   JSON
+═══════════════════════════════════════════════ */
+function detectJson(text) {
+  const t = text.trim();
+  if (!t.startsWith('{') && !t.startsWith('[')) return;
+  try {
+    const parsed = JSON.parse(t);
+    if (typeof parsed !== 'object' || parsed === null) return;
     lastParsedJson = parsed;
     document.getElementById('json-banner').classList.add('visible');
-    document.getElementById('json-format-btn').classList.remove('active');
-    document.getElementById('json-minify-btn').classList.remove('active');
-  } catch {
-    // Not valid JSON — stay silent
-  }
+  } catch {}
 }
 
 function toggleJsonFormat() {
   if (!lastParsedJson) return;
-  if (jsonPanelMode === 'format') {
-    closeJsonPanel();
-    return;
-  }
+  if (jsonPanelMode === 'format') { closeJsonPanel(); return; }
   jsonPanelMode = 'format';
   document.getElementById('json-format-btn').classList.add('active');
   document.getElementById('json-minify-btn').classList.remove('active');
-  const formatted = JSON.stringify(lastParsedJson, null, 2);
   document.getElementById('json-panel-title').textContent = 'Formatted JSON';
-  document.getElementById('json-pre').innerHTML = syntaxHighlight(formatted);
+  document.getElementById('json-pre').innerHTML = syntaxHighlight(JSON.stringify(lastParsedJson, null, 2));
   document.getElementById('json-panel').classList.add('visible');
   setTimeout(() => document.getElementById('json-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
 }
 
 function toggleJsonMinify() {
   if (!lastParsedJson) return;
-  if (jsonPanelMode === 'minify') {
-    closeJsonPanel();
-    return;
-  }
+  if (jsonPanelMode === 'minify') { closeJsonPanel(); return; }
   jsonPanelMode = 'minify';
   document.getElementById('json-minify-btn').classList.add('active');
   document.getElementById('json-format-btn').classList.remove('active');
-  const minified = JSON.stringify(lastParsedJson);
   document.getElementById('json-panel-title').textContent = 'Minified JSON';
-  document.getElementById('json-pre').innerHTML = syntaxHighlight(minified);
+  document.getElementById('json-pre').innerHTML = syntaxHighlight(JSON.stringify(lastParsedJson));
   document.getElementById('json-panel').classList.add('visible');
   setTimeout(() => document.getElementById('json-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
 }
@@ -1001,41 +1246,6 @@ function closeJsonPanel() {
   document.getElementById('json-minify-btn').classList.remove('active');
 }
 
-function syntaxHighlight(json) {
-  // Escape HTML first, then colorize
-  const escaped = json
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
-  return escaped.replace(
-    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?|[{}[\],:])/g,
-    match => {
-      if (/^"/.test(match)) {
-        return /:$/.test(match)
-          ? `<span class="json-key">${match}</span>`
-          : `<span class="json-str">${match}</span>`;
-      }
-      if (/true|false/.test(match)) return `<span class="json-bool">${match}</span>`;
-      if (/null/.test(match))       return `<span class="json-null">${match}</span>`;
-      if (/[{}[\],:]/.test(match))  return `<span class="json-punct">${match}</span>`;
-      return `<span class="json-num">${match}</span>`;
-    }
-  );
-}
-
-// ── Copy functions ─────────────────────────────────────
-async function copyRaw() {
-  if (!lastRawOutput) return;
-  try {
-    await navigator.clipboard.writeText(lastRawOutput);
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = 'Copied \u2713';
-    btn.classList.add('success');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('success'); }, 2000);
-  } catch { showToast('Copy failed \u2014 select text manually'); }
-}
-
 async function copyJson() {
   if (!lastParsedJson) return;
   const text = jsonPanelMode === 'minify'
@@ -1044,117 +1254,403 @@ async function copyJson() {
   try {
     await navigator.clipboard.writeText(text);
     const btn = document.getElementById('copy-json-btn');
-    btn.textContent = 'Copied \u2713';
-    btn.classList.add('success');
+    btn.textContent = 'Copied \u2713'; btn.classList.add('success');
     setTimeout(() => { btn.textContent = 'Copy JSON'; btn.classList.remove('success'); }, 2000);
-  } catch { showToast('Copy failed \u2014 select text manually'); }
+  } catch { showToast('Copy failed'); }
 }
 
-// ── Swap ──────────────────────────────────────────────
-function swapToInput() {
-  if (!lastRawOutput) return;
-  document.getElementById('text-input').value = lastRawOutput;
-  updateCharCount();
-  const nextMode = currentMode === 'encrypt' ? 'decrypt' : 'encrypt';
-  setMode(nextMode);
-  hideOutput();
-  showToast('Output \u2192 input \u00B7 mode flipped for round-trip');
-  document.getElementById('text-input').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function syntaxHighlight(json) {
+  const esc = json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc.replace(
+    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?|[{}[\],:])/g,
+    m => {
+      if (/^"/.test(m)) return /:$/.test(m) ? `<span class="json-key">${m}</span>` : `<span class="json-str">${m}</span>`;
+      if (/true|false/.test(m)) return `<span class="json-bool">${m}</span>`;
+      if (/null/.test(m))       return `<span class="json-null">${m}</span>`;
+      if (/[{}[\],:]/.test(m))  return `<span class="json-punct">${m}</span>`;
+      return `<span class="json-num">${m}</span>`;
+    }
+  );
 }
 
-// ── Clear ─────────────────────────────────────────────
-function clearAll() {
-  document.getElementById('key-input').value = '';
-  document.getElementById('text-input').value = '';
-  document.getElementById('key-status').textContent = '';
-  document.getElementById('key-status').className = 'key-status';
-  document.getElementById('char-count').textContent = '';
-  hideOutput();
-  hideEncHint();
-  showToast('Cleared');
+/* ═══════════════════════════════════════════════
+   FILE TAB
+═══════════════════════════════════════════════ */
+function setFileMode(mode) {
+  fileMode = mode;
+  document.getElementById('fbtn-encrypt').classList.toggle('active', mode === 'encrypt');
+  document.getElementById('fbtn-decrypt').classList.toggle('active', mode === 'decrypt');
+  document.getElementById('file-mode-label').textContent = mode === 'encrypt'
+    ? 'Encrypt a file \u2192 download as .xenc'
+    : 'Decrypt a .xenc file \u2192 restore original';
+  document.getElementById('file-btn-label').textContent = mode === 'encrypt'
+    ? 'Encrypt & Download' : 'Decrypt & Download';
+  document.getElementById('file-input-hint').textContent = mode === 'encrypt'
+    ? '// any file up to 10 MB'
+    : '// must be a valid .xenc file';
+  document.getElementById('drop-sub').textContent = mode === 'encrypt'
+    ? 'Any format accepted'
+    : '.xenc files only';
+  // swap the icon to shield for encrypt, unlock for decrypt
+  document.getElementById('file-run-icon').innerHTML = mode === 'encrypt'
+    ? `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`
+    : `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>`;
+  clearFileResult();
+  clearFileSizeError();
+  // Clear file if switching modes and selected file doesn't match
+  if (selectedFile) {
+    if (mode === 'decrypt' && !selectedFile.name.endsWith('.xenc')) clearFile();
+    if (mode === 'encrypt' &&  selectedFile.name.endsWith('.xenc')) clearFile();
+  }
 }
 
-// ── History ───────────────────────────────────────────
-function saveHistory(type, input, output) {
-  let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
-  // Store full input/output — truncation was causing broken reload
-  h.unshift({
-    type,
-    inputFull:   input,
-    inputPreview: input.slice(0, 55) + (input.length > 55 ? '\u2026' : ''),
-    outputPreview: output.slice(0, 55) + (output.length > 55 ? '\u2026' : ''),
-    time: new Date().toLocaleTimeString(),
-    encoding: currentEncoding
+// ── Drop zone ─────────────────────────────────
+function onDragOver(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.add('drag-over');
+}
+function onDragLeave(e) {
+  document.getElementById('drop-zone').classList.remove('drag-over');
+}
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) processSelectedFile(file);
+}
+function onFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) processSelectedFile(file);
+}
+
+function processSelectedFile(file) {
+  clearFileResult();
+  clearFileSizeError();
+
+  if (file.size > MAX_FILE_BYTES) {
+    showFileSizeError(`"${file.name}" is ${formatBytes(file.size)} — max is 10 MB.`);
+    return;
+  }
+  if (fileMode === 'decrypt' && !file.name.endsWith('.xenc')) {
+    showFileSizeError(`Expected a .xenc file, got "${file.name}".`);
+    return;
+  }
+
+  selectedFile = file;
+  pendingBlob  = null;
+
+  // Update drop zone UI
+  const dz = document.getElementById('drop-zone');
+  dz.classList.add('has-file');
+  document.getElementById('drop-icon').innerHTML = fileMode === 'decrypt'
+    ? `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`
+    : `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>`;
+  document.getElementById('drop-title').textContent = file.name;
+  document.getElementById('drop-sub').textContent   = formatBytes(file.size);
+
+  // Show file info card
+  document.getElementById('file-name-display').textContent = file.name;
+  document.getElementById('file-meta-display').textContent = `${formatBytes(file.size)} \u00B7 ${file.type || 'unknown type'}`;
+  document.getElementById('file-info').classList.add('visible');
+  // Remove the file input's click listener from drop zone so remove works
+  document.getElementById('drop-zone').style.pointerEvents = 'none';
+  document.getElementById('file-info').style.display = 'flex';
+}
+
+function clearFile() {
+  selectedFile = null; pendingBlob = null; pendingFileName = '';
+  const dz = document.getElementById('drop-zone');
+  dz.classList.remove('has-file', 'drag-over');
+  dz.style.pointerEvents = '';
+  document.getElementById('drop-icon').innerHTML = `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>`;
+  document.getElementById('drop-title').textContent = 'Drop a file or click to browse';
+  document.getElementById('drop-sub').textContent   = fileMode === 'encrypt' ? 'Any format accepted' : '.xenc files only';
+  document.getElementById('file-info').classList.remove('visible');
+  document.getElementById('file-info').style.display = '';
+  document.getElementById('file-input').value = '';
+  clearFileResult();
+  clearFileSizeError();
+}
+
+function showFileSizeError(msg) {
+  const el = document.getElementById('size-error');
+  document.getElementById('size-error-text').textContent = msg;
+  el.classList.add('visible');
+}
+function clearFileSizeError() {
+  document.getElementById('size-error').classList.remove('visible');
+}
+
+// ── Progress ──────────────────────────────────
+function showProgress(pct, label) {
+  document.getElementById('progress-section').classList.add('visible');
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = label;
+}
+function hideProgress() {
+  document.getElementById('progress-section').classList.remove('visible');
+  document.getElementById('progress-bar').style.width = '0%';
+}
+
+// ── File result ───────────────────────────────
+function showFileResult(ok, title, sub, errMsg) {
+  const fr   = document.getElementById('file-result');
+  const card = document.getElementById('file-result-card');
+  const icon = document.getElementById('result-icon');
+  fr.classList.add('visible');
+  card.className = 'file-result-card' + (ok ? '' : ' error-card');
+  icon.className = 'result-icon ' + (ok ? 'ok' : 'err');
+  icon.innerHTML = ok
+    ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+    : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent   = sub || '';
+  const errEl = document.getElementById('result-error');
+  if (errMsg) { errEl.textContent = errMsg; errEl.style.display = 'block'; }
+  else        { errEl.style.display = 'none'; }
+  const dlBtn = document.getElementById('btn-download');
+  dlBtn.style.display = (ok && pendingBlob) ? 'flex' : 'none';
+  setTimeout(() => fr.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+function clearFileResult() {
+  document.getElementById('file-result').classList.remove('visible');
+  pendingBlob = null; pendingFileName = '';
+}
+
+// ── XENC format helpers ───────────────────────
+/*
+  XENC binary format:
+    [0..3]  Magic "XENC"  (4 bytes)
+    [4]     Version 0x01  (1 byte)
+    [5..20] IV            (16 bytes)
+    [21..22] Filename len (uint16 BE)
+    [23..N] Filename      (UTF-8)
+    [N+1..] Encrypted data
+*/
+const MAGIC   = [0x58, 0x45, 0x4E, 0x43]; // "XENC"
+const VERSION = 0x01;
+
+function buildXencBuffer(iv, encryptedData, originalFilename) {
+  const nameBytes = new TextEncoder().encode(originalFilename);
+  const nameLen   = nameBytes.length;
+  // Header: 4 magic + 1 version + 16 IV + 2 name len + name len
+  const headerLen = 4 + 1 + 16 + 2 + nameLen;
+  const total     = headerLen + encryptedData.byteLength;
+  const buf       = new Uint8Array(total);
+  let o = 0;
+  MAGIC.forEach(b => { buf[o++] = b; });
+  buf[o++] = VERSION;
+  iv.forEach(b => { buf[o++] = b; });
+  buf[o++] = (nameLen >> 8) & 0xff;
+  buf[o++] = nameLen & 0xff;
+  nameBytes.forEach(b => { buf[o++] = b; });
+  buf.set(new Uint8Array(encryptedData), o);
+  return buf;
+}
+
+function parseXencBuffer(buf) {
+  // Validate magic
+  const magic = [buf[0], buf[1], buf[2], buf[3]];
+  if (!magic.every((b, i) => b === MAGIC[i]))
+    throw new Error('Not a valid .xenc file \u2014 magic bytes missing');
+  const version = buf[4];
+  if (version !== VERSION)
+    throw new Error(`Unsupported .xenc version: ${version}`);
+  const iv      = buf.slice(5, 21);
+  const nameLen = (buf[21] << 8) | buf[22];
+  const nameBytes = buf.slice(23, 23 + nameLen);
+  const originalFilename = new TextDecoder('utf-8').decode(nameBytes);
+  const encryptedData = buf.slice(23 + nameLen);
+  return { iv, encryptedData, originalFilename };
+}
+
+// ── Run file ──────────────────────────────────
+async function runFile() {
+  clearFileResult();
+  const keyHex = getKeyHex();
+  try {
+    assertKeyValid(keyHex);
+    if (!selectedFile) throw new Error('No file selected.');
+  } catch(e) {
+    showFileResult(false, 'Error', '', e.message); return;
+  }
+
+  const btn = document.getElementById('file-run-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  showProgress(10, 'Reading file...');
+
+  try {
+    const key       = await importKey(keyHex);
+    const fileBytes = await readFileAsArrayBuffer(selectedFile);
+    showProgress(35, fileMode === 'encrypt' ? 'Encrypting...' : 'Decrypting...');
+
+    if (fileMode === 'encrypt') {
+      const iv        = crypto.getRandomValues(new Uint8Array(16));
+      const encrypted = await crypto.subtle.encrypt({ name: 'AES-CBC', iv }, key, fileBytes);
+      showProgress(80, 'Building .xenc file...');
+      const xencBuf   = buildXencBuffer(iv, encrypted, selectedFile.name);
+      pendingBlob     = new Blob([xencBuf], { type: 'application/octet-stream' });
+      pendingFileName = selectedFile.name + '.xenc';
+      showProgress(100, 'Done');
+      hideProgress();
+      showFileResult(
+        true,
+        'Encrypted successfully',
+        `${selectedFile.name} \u2192 ${pendingFileName} \u00B7 ${formatBytes(pendingBlob.size)}`
+      );
+      saveHistory('file', { type: 'fenc', name: selectedFile.name, size: selectedFile.size });
+
+    } else {
+      showProgress(35, 'Parsing .xenc header...');
+      const xencBuf = new Uint8Array(fileBytes);
+      const { iv, encryptedData, originalFilename } = parseXencBuffer(xencBuf);
+      showProgress(60, 'Decrypting...');
+      let decrypted;
+      try {
+        decrypted = await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, encryptedData);
+      } catch {
+        throw new Error('Decryption failed \u2014 wrong key or file is corrupted');
+      }
+      showProgress(95, 'Restoring file...');
+      pendingBlob     = new Blob([decrypted]);
+      pendingFileName = originalFilename;
+      showProgress(100, 'Done');
+      hideProgress();
+      showFileResult(
+        true,
+        'Decrypted successfully',
+        `Restored: ${originalFilename} \u00B7 ${formatBytes(decrypted.byteLength)}`
+      );
+      saveHistory('file', { type: 'fdec', name: originalFilename, size: decrypted.byteLength });
+    }
+
+  } catch(e) {
+    hideProgress();
+    showFileResult(false, 'Failed', '', e.message || 'Unexpected error.');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload  = () => resolve(r.result);
+    r.onerror = () => reject(new Error('Failed to read file'));
+    r.readAsArrayBuffer(file);
   });
-  if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
-  try { sessionStorage.setItem('cipher_history', JSON.stringify(h)); } catch {}
-  renderHistory();
 }
 
-function renderHistory() {
+function triggerDownload() {
+  if (!pendingBlob || !pendingFileName) return;
+  const url = URL.createObjectURL(pendingBlob);
+  const a   = document.createElement('a');
+  a.href = url; a.download = pendingFileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  showToast(`Downloading ${pendingFileName}`);
+}
+
+/* ═══════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════ */
+function saveHistory(scope, item) {
+  const key = `xenc_history_${scope}`;
   let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
-  const section = document.getElementById('history-section');
-  const list    = document.getElementById('history-list');
+  try { h = JSON.parse(sessionStorage.getItem(key) || '[]'); } catch {}
+  h.unshift({ ...item, time: new Date().toLocaleTimeString() });
+  if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
+  try { sessionStorage.setItem(key, JSON.stringify(h)); } catch {}
+  renderHistory(scope);
+}
+
+function renderHistory(scope) {
+  const key     = `xenc_history_${scope}`;
+  const section = document.getElementById(`${scope}-history-section`);
+  const list    = document.getElementById(`${scope}-history-list`);
+  let h = [];
+  try { h = JSON.parse(sessionStorage.getItem(key) || '[]'); } catch {}
   if (!h.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
-  list.innerHTML = h.map((item, i) => `
-    <div class="history-item" onclick="loadHistory(${i})" title="Click to reload input">
-      <span class="history-badge ${item.type}">${item.type === 'enc' ? 'ENC' : 'DEC'}</span>
-      <span class="history-preview">${escHtml(item.inputPreview)}</span>
-      <span class="history-time">${item.time}</span>
-    </div>
-  `).join('');
+
+  if (scope === 'text') {
+    list.innerHTML = h.map((item, i) => `
+      <div class="history-item" onclick="loadTextHistory(${i})" title="Restore input">
+        <span class="history-badge ${item.type}">${item.type.toUpperCase()}</span>
+        <span class="history-preview">${escHtml(item.input.slice(0,55))}${item.input.length>55?'\u2026':''}</span>
+        <span class="history-time">${item.time}</span>
+      </div>
+    `).join('');
+  } else {
+    list.innerHTML = h.map(item => `
+      <div class="history-item" style="cursor:default">
+        <span class="history-badge ${item.type}">${item.type === 'fenc' ? 'ENC' : 'DEC'}</span>
+        <span class="history-preview">${escHtml(item.name)}</span>
+        <span class="history-time">${formatBytes(item.size)} &middot; ${item.time}</span>
+      </div>
+    `).join('');
+  }
 }
 
-function loadHistory(i) {
+function loadTextHistory(i) {
   let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
+  try { h = JSON.parse(sessionStorage.getItem('xenc_history_text') || '[]'); } catch {}
   const item = h[i];
   if (!item) return;
-  document.getElementById('text-input').value = item.inputFull;
-  updateCharCount();
-  // Restore encoding if recorded
-  if (item.encoding && item.encoding !== currentEncoding) setEncoding(item.encoding);
-  hideOutput();
+  document.getElementById('text-input').value = item.input;
+  updateCharCount(); hideTextOutput();
   showToast('Input restored from history');
 }
 
-function clearHistory() {
-  try { sessionStorage.removeItem('cipher_history'); } catch {}
-  renderHistory();
+function clearHistory(scope) {
+  try { sessionStorage.removeItem(`xenc_history_${scope}`); } catch {}
+  renderHistory(scope);
   showToast('History cleared');
 }
 
-// ── Utils ─────────────────────────────────────────────
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ═══════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════ */
+function formatBytes(n) {
+  if (n < 1024)         return n + ' B';
+  if (n < 1024 * 1024)  return (n / 1024).toFixed(1) + ' KB';
+  return (n / (1024*1024)).toFixed(2) + ' MB';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-// ── Keyboard ──────────────────────────────────────────
+/* ═══════════════════════════════════════════════
+   KEYBOARD
+═══════════════════════════════════════════════ */
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
-    run();
+    if (currentTab === 'text') runText(); else runFile();
   }
-  // Escape closes JSON panel
   if (e.key === 'Escape' && document.getElementById('json-panel').classList.contains('visible')) {
     closeJsonPanel();
   }
 });
 
-// ── Init ──────────────────────────────────────────────
-renderHistory();
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+renderHistory('text');
+renderHistory('file');
 </script>
 </body>
 </html>
