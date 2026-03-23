@@ -53,6 +53,7 @@
   --accent: #6c63ff;
   --accent2: #00d4aa;
   --danger: #ff4d6d;
+  --warn: #ffbd2e;
   --text: #e8e8f0;
   --muted: #5a5a7a;
   --mono: 'JetBrains Mono', monospace;
@@ -90,7 +91,7 @@ body::after {
 }
 .container { width: 100%; max-width: 780px; position: relative; z-index: 1; }
 
-/* Header */
+/* ── Header ── */
 .header { margin-bottom: 40px; }
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -115,7 +116,7 @@ h1 span { color: var(--accent); }
 }
 .byline:hover { opacity: 1; }
 
-/* Toolbar */
+/* ── Toolbar ── */
 .toolbar {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
@@ -152,7 +153,7 @@ h1 span { color: var(--accent); }
 }
 .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
 
-/* Card */
+/* ── Card ── */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
 .card-header {
   padding: 13px 18px; border-bottom: 1px solid var(--border);
@@ -180,14 +181,14 @@ input:focus, textarea:focus { border-color: var(--accent); }
 input::placeholder, textarea::placeholder { color: #2a2a4a; }
 textarea { min-height: 88px; line-height: 1.6; }
 
-/* Key row */
+/* ── Key row ── */
 .key-row { display: flex; gap: 8px; align-items: stretch; }
 .key-wrapper { position: relative; flex: 1; }
 .key-wrapper input { padding-right: 92px; }
 .key-status {
   position: absolute; right: 38px; top: 50%; transform: translateY(-50%);
   font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 2px;
+  padding: 2px 7px; border-radius: 2px; pointer-events: none;
 }
 .key-status.valid   { color: var(--accent2); background: rgba(0,212,170,.1); }
 .key-status.invalid { color: var(--danger);  background: rgba(255,77,109,.1); }
@@ -205,55 +206,76 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .btn-gen:hover { background: rgba(108,99,255,.2); }
 
-/* Textarea + counter */
+/* ── Textarea + counter ── */
 .textarea-wrapper { position: relative; }
 .char-count {
   position: absolute; bottom: 8px; right: 10px;
   font-size: 9px; color: #2e2e50; letter-spacing: 0.05em; pointer-events: none;
 }
 
-/* Run button */
+/* ── Encoding hint banner ── */
+.enc-hint {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,189,46,.06);
+  border: 1px solid rgba(255,189,46,.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--warn);
+}
+.enc-hint.visible { display: flex; }
+.enc-hint-btn {
+  margin-left: auto; padding: 3px 10px; border-radius: 2px;
+  background: rgba(255,189,46,.1); border: 1px solid rgba(255,189,46,.3);
+  color: var(--warn); font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all .15s;
+}
+.enc-hint-btn:hover { background: rgba(255,189,46,.2); }
+
+/* ── Run button ── */
 .btn-run {
   width: 100%; padding: 13px; background: var(--accent); border: none;
   border-radius: 4px; color: white; font-family: var(--mono); font-size: 12px;
   font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
-  transition: all .15s; display: flex; align-items: center; justify-content: center;
-  gap: 8px; position: relative; overflow: hidden;
+  transition: background .15s, transform .1s; display: flex; align-items: center;
+  justify-content: center; gap: 8px; position: relative; overflow: hidden;
 }
 .btn-run::after {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
   transform: translateX(-100%); transition: transform .4s ease;
 }
-.btn-run:hover { background: #7c74ff; }
-.btn-run:hover::after { transform: translateX(100%); }
-.btn-run:active { transform: scale(.99); }
-.btn-run:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-run:hover:not(:disabled) { background: #7c74ff; }
+.btn-run:hover:not(:disabled)::after { transform: translateX(100%); }
+.btn-run:active:not(:disabled) { transform: scale(.99); }
+.btn-run:disabled { opacity: .45; cursor: not-allowed; }
 .spinner {
   width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
   border-top-color: #fff; border-radius: 50%;
-  animation: spin .6s linear infinite; display: none;
+  animation: spin .6s linear infinite; display: none; flex-shrink: 0;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .btn-run.loading .spinner { display: block; }
-.btn-run.loading .btn-label { opacity: .6; }
 .shortcut-hint { text-align: right; font-size: 9px; color: #2a2a45; letter-spacing: 0.08em; margin-top: -8px; }
 
-/* Divider */
+/* ── Divider ── */
 .divider { display: flex; align-items: center; gap: 12px; padding: 0 20px; }
 .divider-line { flex: 1; height: 1px; background: var(--border); }
 .divider-label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
 
-/* Output */
+/* ── Output section ── */
 .output-section {
   opacity: 0; transform: translateY(6px); transition: all .25s ease;
-  pointer-events: none; height: 0; overflow: hidden;
+  pointer-events: none; max-height: 0; overflow: hidden;
 }
 .output-section.visible {
-  opacity: 1; transform: translateY(0); pointer-events: all; height: auto; overflow: visible;
+  opacity: 1; transform: translateY(0); pointer-events: all;
+  max-height: 2000px; overflow: visible;
 }
 .output-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
-.output-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.output-label-text { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
 .output-actions { display: flex; gap: 6px; }
 .out-btn {
   padding: 4px 10px; border-radius: 3px; font-family: var(--mono); font-size: 10px;
@@ -261,17 +283,83 @@ textarea { min-height: 88px; line-height: 1.6; }
   transition: all .15s; border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
 }
 .out-btn:hover { color: var(--text); border-color: var(--border-active); }
-.out-btn.copy-success { color: var(--accent2); border-color: rgba(0,212,170,.3); background: rgba(0,212,170,.08); }
+.out-btn.success { color: var(--accent2); border-color: rgba(0,212,170,.3); background: rgba(0,212,170,.08); }
+.out-btn.danger-btn:hover { color: var(--danger); border-color: rgba(255,77,109,.3); }
+
 .output-box {
   background: rgba(0,212,170,.03); border: 1px solid rgba(0,212,170,.18);
   border-radius: 4px; padding: 12px 14px; font-size: 13px; color: var(--accent2);
   word-break: break-all; line-height: 1.7; white-space: pre-wrap; min-height: 52px; user-select: text;
 }
-.output-box.error { color: var(--danger); background: rgba(255,77,109,.03); border-color: rgba(255,77,109,.18); }
-.output-footer { display: flex; justify-content: flex-end; margin-top: 6px; }
+.output-box.error-box { color: var(--danger); background: rgba(255,77,109,.03); border-color: rgba(255,77,109,.18); }
+.output-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
 .output-bytes { font-size: 9px; color: #2e2e52; letter-spacing: 0.06em; }
 
-/* History */
+/* ── JSON banner ── */
+.json-banner {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: rgba(108,99,255,.07);
+  border: 1px solid rgba(108,99,255,.25);
+  border-radius: 4px;
+  padding: 9px 14px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--accent);
+}
+.json-banner.visible { display: flex; }
+.json-banner-icon { font-size: 14px; flex-shrink: 0; }
+.json-banner-text { flex: 1; }
+.json-banner-text strong { font-weight: 700; }
+.json-banner-text span { opacity: .7; font-size: 10px; }
+.json-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.json-btn {
+  padding: 4px 10px; border-radius: 3px; font-family: var(--mono); font-size: 10px;
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  transition: all .15s; border: 1px solid rgba(108,99,255,.3);
+  background: rgba(108,99,255,.1); color: var(--accent);
+}
+.json-btn:hover { background: rgba(108,99,255,.2); }
+.json-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ── JSON formatted panel ── */
+.json-panel {
+  display: none;
+  margin-top: 10px;
+  border: 1px solid rgba(108,99,255,.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.json-panel.visible { display: block; }
+.json-panel-header {
+  background: rgba(108,99,255,.06);
+  border-bottom: 1px solid rgba(108,99,255,.15);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.json-panel-title {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--accent); opacity: .8;
+}
+.json-panel-actions { display: flex; gap: 6px; }
+.json-pre {
+  margin: 0; padding: 14px; background: rgba(108,99,255,.03);
+  font-family: var(--mono); font-size: 12px; line-height: 1.7;
+  overflow-x: auto; max-height: 400px; overflow-y: auto; white-space: pre;
+  user-select: text;
+}
+/* JSON syntax colors */
+.json-key   { color: #a78bfa; }
+.json-str   { color: var(--accent2); }
+.json-num   { color: #f97316; }
+.json-bool  { color: var(--accent); }
+.json-null  { color: var(--muted); }
+.json-punct { color: #3a3a6a; }
+
+/* ── History ── */
 .history-section { margin-top: 24px; }
 .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .history-title { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
@@ -296,17 +384,42 @@ textarea { min-height: 88px; line-height: 1.6; }
 .history-badge.dec { color: var(--accent2); background: rgba(0,212,170,.1); }
 .history-preview { font-size: 11px; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .history-time { font-size: 9px; color: #2e2e52; flex-shrink: 0; }
+.history-note { font-size: 9px; color: #2a2a45; margin-top: 4px; letter-spacing: 0.04em; }
 
-/* Info strip */
-.info-strip { margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+/* ── Star banner ── */
+.star-banner {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,189,46,.04);
+  border: 1px solid rgba(255,189,46,.15);
+  border-radius: 4px;
+  padding: 12px 18px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+  text-align: center;
+}
+.star-banner a {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--warn); text-decoration: none; font-weight: 700;
+  font-size: 12px; letter-spacing: 0.04em; transition: opacity .15s; opacity: .9;
+}
+.star-banner a:hover { opacity: 1; }
+.star-icon { font-size: 14px; }
+
+/* ── Info strip ── */
+.info-strip { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
 .info-chip {
   display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted);
   background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 2px;
 }
 .info-chip .ic-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
 
-/* Footer */
-.footer { margin-top: 40px; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+/* ── Footer ── */
+.footer { margin-top: 36px; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
 .footer a { color: var(--accent); text-decoration: none; opacity: .8; transition: opacity .15s; }
 .footer a:hover { opacity: 1; }
 .social-links { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 14px; }
@@ -318,7 +431,7 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .social-links a:hover { color: var(--text); border-color: var(--border-active); background: rgba(108,99,255,.06); }
 
-/* Toast */
+/* ── Toast ── */
 .toast {
   position: fixed; bottom: 28px; left: 50%;
   transform: translateX(-50%) translateY(20px);
@@ -328,18 +441,21 @@ textarea { min-height: 88px; line-height: 1.6; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-@media (max-width: 520px) {
+@media (max-width: 540px) {
   .toolbar { flex-direction: column; align-items: flex-start; }
   .toolbar-right { width: 100%; justify-content: space-between; }
   .key-row { flex-direction: column; }
   .btn-gen { width: 100%; justify-content: center; padding: 10px; }
-  .social-links { flex-direction: column; }
+  .social-links { flex-direction: column; align-items: center; }
+  .json-banner { flex-wrap: wrap; }
+  .json-actions { width: 100%; }
 }
 </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- Header -->
   <div class="header">
     <div class="badge">aes-256-cbc</div>
     <h1>Cipher<span>.</span></h1>
@@ -347,13 +463,14 @@ textarea { min-height: 88px; line-height: 1.6; }
     <a class="byline" href="https://abubakarshaikh.dev" target="_blank" rel="noopener">abubakarshaikh.dev</a>
   </div>
 
+  <!-- Toolbar -->
   <div class="toolbar">
     <div class="mode-toggle">
       <button class="mode-btn active" onclick="setMode('decrypt')" id="btn-decrypt">Decrypt</button>
       <button class="mode-btn" onclick="setMode('encrypt')" id="btn-encrypt">Encrypt</button>
     </div>
     <div class="toolbar-right">
-      <div class="encoding-toggle">
+      <div class="encoding-toggle" title="Output encoding format">
         <button class="enc-btn active" onclick="setEncoding('hex')" id="enc-hex">Hex</button>
         <button class="enc-btn" onclick="setEncoding('base64')" id="enc-b64">Base64</button>
       </div>
@@ -361,6 +478,7 @@ textarea { min-height: 88px; line-height: 1.6; }
     </div>
   </div>
 
+  <!-- Main card -->
   <div class="card">
     <div class="card-header">
       <span class="dot dot-red"></span>
@@ -371,6 +489,7 @@ textarea { min-height: 88px; line-height: 1.6; }
 
     <div class="field-group">
 
+      <!-- Key -->
       <div class="field">
         <label>
           Secret Key (hex)
@@ -381,26 +500,27 @@ textarea { min-height: 88px; line-height: 1.6; }
             <input
               type="password"
               id="key-input"
-              placeholder="e.g. 4a7c3f2e1b9d..."
+              placeholder="e.g. 4a7c3f2e1b9d8a5c..."
               spellcheck="false"
               autocomplete="off"
               oninput="validateKey(this.value)"
             />
             <span class="key-status" id="key-status"></span>
-            <button class="key-eye" onclick="toggleKeyVisibility()" id="eye-btn" title="Show/hide key" type="button">
+            <button class="key-eye" onclick="toggleKeyVisibility()" title="Show / hide key" type="button">
               <svg id="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
             </button>
           </div>
-          <button class="btn-gen" onclick="generateKey()" title="Generate a random 256-bit key" type="button">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <button class="btn-gen" onclick="generateKey()" title="Generate a cryptographically random 256-bit key" type="button">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             Gen Key
           </button>
         </div>
       </div>
 
+      <!-- Input text -->
       <div class="field">
         <label id="input-label">Ciphertext <span class="hint">// iv_hex:encrypted_hex</span></label>
         <div class="textarea-wrapper">
@@ -409,58 +529,111 @@ textarea { min-height: 88px; line-height: 1.6; }
             placeholder="a1b2c3...:d4e5f6..."
             spellcheck="false"
             oninput="updateCharCount()"
+            onpaste="handlePaste(event)"
           ></textarea>
           <span class="char-count" id="char-count"></span>
+        </div>
+        <!-- Auto-detect hint -->
+        <div class="enc-hint" id="enc-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="enc-hint-text">Looks like Base64 encoding — switch?</span>
+          <button class="enc-hint-btn" id="enc-hint-btn" onclick="acceptEncodingHint()" type="button">Switch</button>
         </div>
       </div>
 
       <button class="btn-run" id="run-btn" onclick="run()" type="button">
         <div class="spinner" id="spinner"></div>
-        <span class="btn-label" id="btn-label">&#9889; Run Decrypt</span>
+        <span id="btn-label">&#9889; Run Decrypt</span>
       </button>
       <div class="shortcut-hint">Ctrl + Enter to run</div>
 
     </div>
 
+    <!-- Divider -->
     <div class="divider">
       <div class="divider-line"></div>
       <span class="divider-label">output</span>
       <div class="divider-line"></div>
     </div>
 
+    <!-- Output -->
     <div class="field-group">
       <div class="output-section" id="output-section">
+
         <div class="output-meta">
-          <span class="output-label" id="output-label">Result</span>
+          <span class="output-label-text" id="output-label">Result</span>
           <div class="output-actions">
-            <button class="out-btn" id="swap-btn" onclick="swapToInput()" title="Load output back as input">&#8634; Swap</button>
-            <button class="out-btn" id="copy-btn" onclick="copyOutput()">Copy</button>
+            <button class="out-btn" id="swap-btn" onclick="swapToInput()" title="Load output as new input and flip mode">&#8634; Swap</button>
+            <button class="out-btn" id="copy-btn" onclick="copyRaw()">Copy</button>
           </div>
         </div>
+
         <div class="output-box" id="output-text"></div>
+
         <div class="output-footer">
           <span class="output-bytes" id="output-bytes"></span>
         </div>
+
+        <!-- JSON Detection Banner -->
+        <div class="json-banner" id="json-banner">
+          <span class="json-banner-icon">{ }</span>
+          <div class="json-banner-text">
+            <strong>JSON detected</strong>
+            <span>&nbsp;— pretty-print or minify</span>
+          </div>
+          <div class="json-actions">
+            <button class="json-btn" id="json-format-btn" onclick="toggleJsonFormat()" type="button">Format</button>
+            <button class="json-btn" id="json-minify-btn" onclick="toggleJsonMinify()" type="button">Minify</button>
+          </div>
+        </div>
+
+        <!-- JSON Formatted Panel -->
+        <div class="json-panel" id="json-panel">
+          <div class="json-panel-header">
+            <span class="json-panel-title" id="json-panel-title">Formatted JSON</span>
+            <div class="json-panel-actions">
+              <button class="out-btn" id="copy-json-btn" onclick="copyJson()" type="button">Copy JSON</button>
+              <button class="out-btn danger-btn" onclick="closeJsonPanel()" type="button">Close</button>
+            </div>
+          </div>
+          <pre class="json-pre" id="json-pre"></pre>
+        </div>
+
       </div>
     </div>
   </div>
 
+  <!-- History -->
   <div class="history-section" id="history-section" style="display:none">
     <div class="history-header">
-      <span class="history-title">Recent Operations</span>
+      <span class="history-title">&#128336; Recent Operations <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#2e2e52">(session only)</span></span>
       <button class="btn-clear-history" onclick="clearHistory()">Clear history</button>
     </div>
+    <p class="history-note">Click any item to reload the input. History clears when you close the tab.</p>
+    <br>
     <div class="history-list" id="history-list"></div>
   </div>
 
+  <!-- Star banner -->
+  <div class="star-banner">
+    <span>Built something useful with this?</span>
+    <a href="https://github.com/abubakar-shaikh-dev/cipher" target="_blank" rel="noopener noreferrer">
+      <span class="star-icon">&#11088;</span>
+      Leave a star on GitHub — it takes 2 seconds
+    </a>
+  </div>
+
+  <!-- Info strip -->
   <div class="info-strip">
     <div class="info-chip"><span class="ic-dot"></span> AES-256-CBC</div>
     <div class="info-chip"><span class="ic-dot"></span> 16-byte random IV</div>
     <div class="info-chip"><span class="ic-dot"></span> Web Crypto API</div>
     <div class="info-chip"><span class="ic-dot"></span> 100% in-browser</div>
     <div class="info-chip"><span class="ic-dot"></span> Hex &amp; Base64</div>
+    <div class="info-chip"><span class="ic-dot"></span> JSON formatter</div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     Made by <a href="https://abubakarshaikh.dev" target="_blank" rel="noopener">Abubakar Shaikh</a>
     <div class="social-links">
@@ -480,35 +653,80 @@ textarea { min-height: 88px; line-height: 1.6; }
 <div class="toast" id="toast"></div>
 
 <script>
-let currentMode = 'decrypt';
+// ── State ─────────────────────────────────────────────
+let currentMode     = 'decrypt';
 let currentEncoding = 'hex';
-let keyVisible = false;
-const MAX_HISTORY = 5;
+let keyVisible      = false;
+let lastRawOutput   = '';       // always holds the raw decrypted/encrypted text
+let lastParsedJson  = null;     // holds parsed JSON if detected
+let jsonPanelMode   = null;     // 'format' | 'minify' | null
+let suggestedEncoding = null;   // for paste-detect hint
+const MAX_HISTORY   = 5;
 
+// ── Mode ──────────────────────────────────────────────
 function setMode(mode) {
   currentMode = mode;
   document.getElementById('btn-decrypt').classList.toggle('active', mode === 'decrypt');
   document.getElementById('btn-encrypt').classList.toggle('active', mode === 'encrypt');
   document.getElementById('mode-label').textContent = mode === 'decrypt' ? 'Decrypt ciphertext' : 'Encrypt plaintext';
-  document.getElementById('btn-label').textContent = mode === 'decrypt' ? '\u26A1 Run Decrypt' : '\u26A1 Run Encrypt';
+  document.getElementById('btn-label').textContent  = mode === 'decrypt' ? '\u26A1 Run Decrypt' : '\u26A1 Run Encrypt';
   const hint = mode === 'decrypt'
     ? `<span class="hint">// ${currentEncoding === 'hex' ? 'iv_hex:encrypted_hex' : 'base64_iv:base64_cipher'}</span>`
     : `<span class="hint">// any plaintext string</span>`;
   document.getElementById('input-label').innerHTML = (mode === 'decrypt' ? 'Ciphertext ' : 'Plaintext ') + hint;
   document.getElementById('text-input').placeholder = mode === 'decrypt'
-    ? (currentEncoding === 'hex' ? 'a1b2c3...:d4e5f6...' : 'aGVsbG8=:d4e5...')
-    : 'Enter text to encrypt...';
+    ? (currentEncoding === 'hex' ? 'a1b2c3...:d4e5f6...' : 'aGVsbG8=:d4e5Z...')
+    : 'Enter the text you want to encrypt...';
   hideOutput();
+  hideEncHint();
 }
 
+// ── Encoding ──────────────────────────────────────────
 function setEncoding(enc) {
   currentEncoding = enc;
   document.getElementById('enc-hex').classList.toggle('active', enc === 'hex');
   document.getElementById('enc-b64').classList.toggle('active', enc === 'base64');
   setMode(currentMode);
-  hideOutput();
+  hideEncHint();
 }
 
+function hideEncHint() {
+  document.getElementById('enc-hint').classList.remove('visible');
+  suggestedEncoding = null;
+}
+
+function acceptEncodingHint() {
+  if (suggestedEncoding) setEncoding(suggestedEncoding);
+}
+
+// ── Paste auto-detect encoding ─────────────────────────
+function handlePaste(e) {
+  if (currentMode !== 'decrypt') return;
+  // Wait a tick for the value to update
+  setTimeout(() => {
+    const val = document.getElementById('text-input').value.trim();
+    if (!val.includes(':')) return;
+    const sep    = val.indexOf(':');
+    const ivPart = val.slice(0, sep);
+
+    // Pure hex detection: even length, only 0-9a-f, length == 32 (16 bytes IV)
+    const isHexIV = /^[0-9a-fA-F]{32}$/.test(ivPart);
+    // Base64 detection: contains non-hex chars like g-z A-F after 'f', +, /, =
+    const isB64IV = /[g-zG-Z+/=]/.test(ivPart) && ivPart.length > 0;
+
+    if (isHexIV && currentEncoding !== 'hex') {
+      suggestedEncoding = 'hex';
+      document.getElementById('enc-hint-text').textContent = 'Input looks like Hex encoding — switch?';
+      document.getElementById('enc-hint').classList.add('visible');
+    } else if (isB64IV && currentEncoding !== 'base64') {
+      suggestedEncoding = 'base64';
+      document.getElementById('enc-hint-text').textContent = 'Input looks like Base64 encoding — switch?';
+      document.getElementById('enc-hint').classList.add('visible');
+    }
+  }, 0);
+}
+
+// ── Key ───────────────────────────────────────────────
 function validateKey(val) {
   const status = document.getElementById('key-status');
   if (!val) { status.textContent = ''; status.className = 'key-status'; return; }
@@ -527,51 +745,78 @@ function toggleKeyVisibility() {
 
 function generateKey() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
-  const hex = Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
+  const hex   = Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
   const input = document.getElementById('key-input');
   input.value = hex;
-  input.type = keyVisible ? 'text' : 'password';
   validateKey(hex);
-  showToast('New 256-bit key generated');
+  showToast('New 256-bit key generated \u2014 save it somewhere safe');
 }
 
+// ── Char counter ──────────────────────────────────────
 function updateCharCount() {
   const val = document.getElementById('text-input').value;
   document.getElementById('char-count').textContent = val.length > 0 ? `${val.length} chars` : '';
 }
 
+// ── Crypto helpers ────────────────────────────────────
 function hexToBytes(hex) {
-  if (hex.length % 2 !== 0) throw new Error('Odd-length hex string — check your ciphertext');
-  const arr = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2)
-    arr[i/2] = parseInt(hex.substr(i,2), 16);
+  const clean = hex.replace(/\s/g, '');
+  if (!/^[0-9a-fA-F]*$/.test(clean)) throw new Error('Non-hex characters found in the ciphertext');
+  if (clean.length % 2 !== 0)         throw new Error('Odd-length hex string \u2014 probably truncated ciphertext');
+  const arr = new Uint8Array(clean.length / 2);
+  for (let i = 0; i < clean.length; i += 2)
+    arr[i/2] = parseInt(clean.substr(i,2), 16);
   return arr;
 }
+
 function bytesToHex(bytes) {
   return Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('');
 }
-function base64ToBytes(b64) {
-  const bin = atob(b64);
-  return new Uint8Array([...bin].map(c => c.charCodeAt(0)));
-}
+
+// Fixed: chunked to avoid call stack overflow on large arrays
 function bytesToBase64(bytes) {
-  return btoa(String.fromCharCode(...bytes));
+  let bin = '';
+  const chunk = 8192;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    bin += String.fromCharCode(...bytes.slice(i, i + chunk));
+  }
+  return btoa(bin);
 }
 
-function encodeOutput(ivBytes, cipherBytes) {
-  if (currentEncoding === 'hex')
-    return bytesToHex(ivBytes) + ':' + bytesToHex(new Uint8Array(cipherBytes));
-  return bytesToBase64(ivBytes) + ':' + bytesToBase64(new Uint8Array(cipherBytes));
+function base64ToBytes(b64) {
+  const clean = b64.replace(/\s/g, '');
+  let bin;
+  try { bin = atob(clean); }
+  catch { throw new Error('Invalid Base64 string \u2014 check for missing padding or wrong characters'); }
+  return new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+}
+
+function encodeOutput(ivBytes, cipherBuffer) {
+  const cipherBytes = new Uint8Array(cipherBuffer);
+  return currentEncoding === 'hex'
+    ? bytesToHex(ivBytes) + ':' + bytesToHex(cipherBytes)
+    : bytesToBase64(ivBytes) + ':' + bytesToBase64(cipherBytes);
 }
 
 function decodeInput(text) {
-  const sep = text.indexOf(':');
-  if (sep === -1) throw new Error('Invalid format — expected iv:ciphertext separated by a colon');
-  const ivPart  = text.slice(0, sep);
-  const encPart = text.slice(sep + 1);
-  if (currentEncoding === 'hex')
-    return { iv: hexToBytes(ivPart), cipher: hexToBytes(encPart) };
-  return { iv: base64ToBytes(ivPart), cipher: base64ToBytes(encPart) };
+  const clean = text.trim();
+  const sep   = clean.indexOf(':');
+  if (sep === -1)
+    throw new Error('Invalid format \u2014 expected iv:ciphertext separated by a colon (:)');
+  const ivPart  = clean.slice(0, sep);
+  const encPart = clean.slice(sep + 1);
+  if (!ivPart)  throw new Error('IV part is empty \u2014 check the format');
+  if (!encPart) throw new Error('Ciphertext part is empty \u2014 check the format');
+  if (currentEncoding === 'hex') {
+    const iv     = hexToBytes(ivPart);
+    const cipher = hexToBytes(encPart);
+    if (iv.length !== 16) throw new Error(`IV must be 16 bytes (32 hex chars), got ${iv.length} bytes`);
+    return { iv, cipher };
+  }
+  const iv     = base64ToBytes(ivPart);
+  const cipher = base64ToBytes(encPart);
+  if (iv.length !== 16) throw new Error(`IV must be 16 bytes, got ${iv.length} bytes \u2014 wrong encoding mode?`);
+  return { iv, cipher };
 }
 
 async function getKey(hexKey) {
@@ -579,33 +824,55 @@ async function getKey(hexKey) {
   return crypto.subtle.importKey('raw', raw, { name: 'AES-CBC' }, false, ['encrypt', 'decrypt']);
 }
 
+// ── Run ───────────────────────────────────────────────
 async function run() {
   const keyHex = document.getElementById('key-input').value.trim();
   const input  = document.getElementById('text-input').value.trim();
-  if (!keyHex || !input) return showOutput('Key and input are both required.', true);
-  if (!/^[0-9a-fA-F]{64}$/.test(keyHex)) return showOutput('Key must be exactly 64 hex characters (32 bytes).', true);
+
+  if (!keyHex && !input) return showOutput('Enter your secret key and ciphertext to begin.', true);
+  if (!keyHex)           return showOutput('Secret key is required.', true);
+  if (!input)            return showOutput('Input text is required.', true);
+  if (!/^[0-9a-fA-F]{64}$/.test(keyHex))
+    return showOutput(`Key is ${keyHex.length} chars — must be exactly 64 hex characters (32 bytes for AES-256).`, true);
 
   setLoading(true);
+  hideEncHint();
+
   try {
     const key = await getKey(keyHex);
+
     if (currentMode === 'decrypt') {
       const { iv, cipher } = decodeInput(input);
       const decrypted = await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, cipher);
-      const result = new TextDecoder().decode(decrypted);
-      showOutput(result, false, 'dec');
+      const result    = new TextDecoder('utf-8').decode(decrypted);
+      if (result.length === 0) {
+        showOutput('Decryption succeeded but the result is empty.', false, 'dec');
+      } else {
+        showOutput(result, false, 'dec');
+        detectJson(result);
+      }
       saveHistory('dec', input, result);
+
     } else {
-      const iv = crypto.getRandomValues(new Uint8Array(16));
-      const encoded = new TextEncoder().encode(input);
+      const iv        = crypto.getRandomValues(new Uint8Array(16));
+      const encoded   = new TextEncoder().encode(input);
       const encrypted = await crypto.subtle.encrypt({ name: 'AES-CBC', iv }, key, encoded);
-      const result = encodeOutput(iv, encrypted);
+      const result    = encodeOutput(iv, encrypted);
       showOutput(result, false, 'enc');
       saveHistory('enc', input, result);
     }
-  } catch(e) {
-    const msg = (e.message && !e.message.includes('operation-specific'))
-      ? e.message
-      : 'Decryption failed — wrong key, corrupted ciphertext, or wrong encoding mode (try switching Hex \u2194 Base64).';
+
+  } catch (e) {
+    // Targeted error messages
+    let msg = e.message || '';
+    if (!msg || msg.includes('operation-specific') || msg.includes('OperationError')) {
+      if (currentMode === 'decrypt') {
+        msg = 'Decryption failed \u2014 the key is wrong, ciphertext is corrupted, or the encoding mode is mismatched. '
+            + (currentEncoding === 'hex' ? 'Try switching to Base64.' : 'Try switching to Hex.');
+      } else {
+        msg = 'Encryption failed \u2014 unexpected error.';
+      }
+    }
     showOutput(msg, true);
   } finally {
     setLoading(false);
@@ -616,18 +883,27 @@ function setLoading(on) {
   const btn = document.getElementById('run-btn');
   btn.disabled = on;
   btn.classList.toggle('loading', on);
-  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+  // spinner visibility is driven purely by CSS class — no inline style conflict
 }
 
+// ── Output ────────────────────────────────────────────
 function showOutput(text, isError, type) {
-  const section  = document.getElementById('output-section');
-  const box      = document.getElementById('output-text');
-  const bytes    = document.getElementById('output-bytes');
-  const swapBtn  = document.getElementById('swap-btn');
-  const copyBtn  = document.getElementById('copy-btn');
+  const section = document.getElementById('output-section');
+  const box     = document.getElementById('output-text');
+  const bytes   = document.getElementById('output-bytes');
+  const swapBtn = document.getElementById('swap-btn');
+  const copyBtn = document.getElementById('copy-btn');
 
-  box.textContent = text;
-  box.className = 'output-box' + (isError ? ' error' : '');
+  // Always reset JSON state when new output arrives
+  lastParsedJson = null;
+  jsonPanelMode  = null;
+  closeJsonPanel();
+  document.getElementById('json-banner').classList.remove('visible');
+
+  lastRawOutput = isError ? '' : text;
+
+  box.textContent  = text;
+  box.className    = 'output-box' + (isError ? ' error-box' : '');
 
   if (!isError) {
     const byteLen = new TextEncoder().encode(text).length;
@@ -637,33 +913,147 @@ function showOutput(text, isError, type) {
     document.getElementById('output-label').textContent =
       type === 'enc' ? 'Encrypted Output' : 'Decrypted Output';
   } else {
-    bytes.textContent = '';
-    swapBtn.style.display = 'none';
-    copyBtn.style.display = 'none';
+    bytes.textContent       = '';
+    swapBtn.style.display   = 'none';
+    copyBtn.style.display   = 'none';
     document.getElementById('output-label').textContent = 'Error';
   }
 
   copyBtn.textContent = 'Copy';
-  copyBtn.className = 'out-btn';
+  copyBtn.className   = 'out-btn';
+
   section.classList.add('visible');
   setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
 }
 
 function hideOutput() {
+  lastRawOutput  = '';
+  lastParsedJson = null;
+  jsonPanelMode  = null;
+  closeJsonPanel();
+  document.getElementById('json-banner').classList.remove('visible');
   document.getElementById('output-section').classList.remove('visible');
 }
 
+// ── JSON Detection ─────────────────────────────────────
+function detectJson(text) {
+  const trimmed = text.trim();
+  // Only suggest format for objects and arrays, not bare strings/numbers/booleans
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) return;
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (typeof parsed !== 'object' || parsed === null) return; // skip primitives
+    lastParsedJson = parsed;
+    document.getElementById('json-banner').classList.add('visible');
+    document.getElementById('json-format-btn').classList.remove('active');
+    document.getElementById('json-minify-btn').classList.remove('active');
+  } catch {
+    // Not valid JSON — stay silent
+  }
+}
+
+function toggleJsonFormat() {
+  if (!lastParsedJson) return;
+  if (jsonPanelMode === 'format') {
+    closeJsonPanel();
+    return;
+  }
+  jsonPanelMode = 'format';
+  document.getElementById('json-format-btn').classList.add('active');
+  document.getElementById('json-minify-btn').classList.remove('active');
+  const formatted = JSON.stringify(lastParsedJson, null, 2);
+  document.getElementById('json-panel-title').textContent = 'Formatted JSON';
+  document.getElementById('json-pre').innerHTML = syntaxHighlight(formatted);
+  document.getElementById('json-panel').classList.add('visible');
+  setTimeout(() => document.getElementById('json-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+
+function toggleJsonMinify() {
+  if (!lastParsedJson) return;
+  if (jsonPanelMode === 'minify') {
+    closeJsonPanel();
+    return;
+  }
+  jsonPanelMode = 'minify';
+  document.getElementById('json-minify-btn').classList.add('active');
+  document.getElementById('json-format-btn').classList.remove('active');
+  const minified = JSON.stringify(lastParsedJson);
+  document.getElementById('json-panel-title').textContent = 'Minified JSON';
+  document.getElementById('json-pre').innerHTML = syntaxHighlight(minified);
+  document.getElementById('json-panel').classList.add('visible');
+  setTimeout(() => document.getElementById('json-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+
+function closeJsonPanel() {
+  jsonPanelMode = null;
+  document.getElementById('json-panel').classList.remove('visible');
+  document.getElementById('json-pre').innerHTML = '';
+  document.getElementById('json-format-btn').classList.remove('active');
+  document.getElementById('json-minify-btn').classList.remove('active');
+}
+
+function syntaxHighlight(json) {
+  // Escape HTML first, then colorize
+  const escaped = json
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  return escaped.replace(
+    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?|[{}[\],:])/g,
+    match => {
+      if (/^"/.test(match)) {
+        return /:$/.test(match)
+          ? `<span class="json-key">${match}</span>`
+          : `<span class="json-str">${match}</span>`;
+      }
+      if (/true|false/.test(match)) return `<span class="json-bool">${match}</span>`;
+      if (/null/.test(match))       return `<span class="json-null">${match}</span>`;
+      if (/[{}[\],:]/.test(match))  return `<span class="json-punct">${match}</span>`;
+      return `<span class="json-num">${match}</span>`;
+    }
+  );
+}
+
+// ── Copy functions ─────────────────────────────────────
+async function copyRaw() {
+  if (!lastRawOutput) return;
+  try {
+    await navigator.clipboard.writeText(lastRawOutput);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied \u2713';
+    btn.classList.add('success');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('success'); }, 2000);
+  } catch { showToast('Copy failed \u2014 select text manually'); }
+}
+
+async function copyJson() {
+  if (!lastParsedJson) return;
+  const text = jsonPanelMode === 'minify'
+    ? JSON.stringify(lastParsedJson)
+    : JSON.stringify(lastParsedJson, null, 2);
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copy-json-btn');
+    btn.textContent = 'Copied \u2713';
+    btn.classList.add('success');
+    setTimeout(() => { btn.textContent = 'Copy JSON'; btn.classList.remove('success'); }, 2000);
+  } catch { showToast('Copy failed \u2014 select text manually'); }
+}
+
+// ── Swap ──────────────────────────────────────────────
 function swapToInput() {
-  const output = document.getElementById('output-text').textContent;
-  if (!output) return;
-  document.getElementById('text-input').value = output;
+  if (!lastRawOutput) return;
+  document.getElementById('text-input').value = lastRawOutput;
   updateCharCount();
-  setMode(currentMode === 'encrypt' ? 'decrypt' : 'encrypt');
+  const nextMode = currentMode === 'encrypt' ? 'decrypt' : 'encrypt';
+  setMode(nextMode);
   hideOutput();
-  showToast('Output loaded \u2192 mode flipped for round-trip');
+  showToast('Output \u2192 input \u00B7 mode flipped for round-trip');
   document.getElementById('text-input').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// ── Clear ─────────────────────────────────────────────
 function clearAll() {
   document.getElementById('key-input').value = '';
   document.getElementById('text-input').value = '';
@@ -671,40 +1061,39 @@ function clearAll() {
   document.getElementById('key-status').className = 'key-status';
   document.getElementById('char-count').textContent = '';
   hideOutput();
+  hideEncHint();
   showToast('Cleared');
 }
 
-async function copyOutput() {
-  const text = document.getElementById('output-text').textContent;
-  try {
-    await navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = 'Copied \u2713';
-    btn.classList.add('copy-success');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copy-success'); }, 2000);
-  } catch { showToast('Copy failed — select text manually'); }
-}
-
+// ── History ───────────────────────────────────────────
 function saveHistory(type, input, output) {
   let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch{}
-  h.unshift({ type, input: input.slice(0,60), output: output.slice(0,60), time: new Date().toLocaleTimeString() });
+  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
+  // Store full input/output — truncation was causing broken reload
+  h.unshift({
+    type,
+    inputFull:   input,
+    inputPreview: input.slice(0, 55) + (input.length > 55 ? '\u2026' : ''),
+    outputPreview: output.slice(0, 55) + (output.length > 55 ? '\u2026' : ''),
+    time: new Date().toLocaleTimeString(),
+    encoding: currentEncoding
+  });
   if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
-  try { sessionStorage.setItem('cipher_history', JSON.stringify(h)); } catch{}
+  try { sessionStorage.setItem('cipher_history', JSON.stringify(h)); } catch {}
   renderHistory();
 }
 
 function renderHistory() {
   let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch{}
+  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
   const section = document.getElementById('history-section');
   const list    = document.getElementById('history-list');
   if (!h.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
-  list.innerHTML = h.map((item,i) => `
-    <div class="history-item" onclick="loadHistory(${i})" title="Click to load input">
+  list.innerHTML = h.map((item, i) => `
+    <div class="history-item" onclick="loadHistory(${i})" title="Click to reload input">
       <span class="history-badge ${item.type}">${item.type === 'enc' ? 'ENC' : 'DEC'}</span>
-      <span class="history-preview">${item.input.replace(/</g,'&lt;')}</span>
+      <span class="history-preview">${escHtml(item.inputPreview)}</span>
       <span class="history-time">${item.time}</span>
     </div>
   `).join('');
@@ -712,18 +1101,26 @@ function renderHistory() {
 
 function loadHistory(i) {
   let h = [];
-  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch{}
+  try { h = JSON.parse(sessionStorage.getItem('cipher_history') || '[]'); } catch {}
   const item = h[i];
   if (!item) return;
-  document.getElementById('text-input').value = item.input;
+  document.getElementById('text-input').value = item.inputFull;
   updateCharCount();
-  showToast('Loaded from history');
+  // Restore encoding if recorded
+  if (item.encoding && item.encoding !== currentEncoding) setEncoding(item.encoding);
+  hideOutput();
+  showToast('Input restored from history');
 }
 
 function clearHistory() {
-  try { sessionStorage.removeItem('cipher_history'); } catch{}
+  try { sessionStorage.removeItem('cipher_history'); } catch {}
   renderHistory();
   showToast('History cleared');
+}
+
+// ── Utils ─────────────────────────────────────────────
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 let toastTimer;
@@ -732,13 +1129,22 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+// ── Keyboard ──────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') run();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    run();
+  }
+  // Escape closes JSON panel
+  if (e.key === 'Escape' && document.getElementById('json-panel').classList.contains('visible')) {
+    closeJsonPanel();
+  }
 });
 
+// ── Init ──────────────────────────────────────────────
 renderHistory();
 </script>
 </body>
